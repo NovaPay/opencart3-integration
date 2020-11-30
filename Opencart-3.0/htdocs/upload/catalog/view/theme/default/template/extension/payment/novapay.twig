@@ -1,0 +1,19 @@
+﻿<form action="{{ action }}" method="post">
+  <input type="hidden" name="token" value="{{ token }}" />
+  <input type="hidden" name="order_id" value="{{ order_id }}" />
+  <div class="buttons">
+    <div class="pull-right">
+      <input type="submit" value="{{ button_confirm }}" id="button-confirm" class="btn btn-primary" />
+    </div>
+  </div>
+</form>
+
+<script type="text/javascript"><!--
+    if(!$('#collapse-payment-method').hasClass('fixed')) {
+        jQuery('[href="#collapse-payment-method"]').click();
+        setTimeout(function() {
+            jQuery('#button-payment-method').click();
+        }, 1000);
+        $('#collapse-payment-method').addClass('fixed');
+    }
+//--></script>

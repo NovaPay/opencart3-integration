@@ -1,0 +1,55 @@
+<h2>Novapay navigation</h2>
+<div style="display: flex;flex-wrap: wrap">
+    {% if cancel %}
+    <div style="margin:10px;">
+        <button name="cancel" class="novapay-butt btn btn-danger">Cancel Payment</button>
+    </div>
+    {% endif %}
+    <div style="margin:10px;">
+        <button name="update" class="novapay-butt btn btn-primary">Check Status</button>
+    </div>
+    {% if hold %}
+    <div style="margin:10px;display: flex; align-items: center;width:100%;">
+        <input style="height: 36px; margin-right: 10px; width: 138px;padding-left: 10px" name="amount-price" type="number" pattern="[0-9]+([\.,][0-9]+)?" step="0.01">
+        <button name="confirm" class="novapay-butt btn">Confirm Hold</button>
+    </div>
+    {% endif %}
+</div>
+<form method="POST" id="updateForm" action="{{ action_url }}">
+    <input type="hidden" name="order_id" value="{{ order_id }}"/>
+    <input type="hidden" name="button_name" value="" />
+    <input type="hidden" name="amount" value="" />
+    <input type="hidden" name="total" value="{{ total }}" />
+    <input type="hidden" name="test" value="{{ test }}" />
+</form>
+<script type="text/javascript"><!--
+    $(".novapay-butt").bind('click', function () {
+        $('[name="button_name"]').val($(this).attr('name'));
+        if($(this).attr('name') === 'confirm') {
+            var amount_price = parseFloat($('[name="amount-price"]').val().replace(',', '.'));
+            if((amount_price === '' || !(amount_price > 0)) || amount_price > parseFloat($('[name="total"]').val()).toFixed(2)) {
+                $('[name="amount-price"]').css('border', '1px solid red');
+                return;
+            } else $('[name="amount"]').val(amount_price);
+        }
+        $('#updateForm').submit();
+    });
+    setTimeout(function() {
+        var name = $('#history tbody tr:first td:eq(2)').text();
+        for(var i = 0; i < $('#input-order-status option').length; i++) {
+            if($('#input-order-status option').eq(i).text() == name) {
+                $('#input-order-status').val($('#input-order-status option').eq(i).val());
+            }
+        }
+    }, 2000);
+    var params = location.search.split('&');
+    var error = params[params.length - 1].split('=');
+    if(error[0] === 'error' && error[1] !== '') {
+        alert(decodeURI(error[1]).replace(/\+/g, " ").replace('%3A', ':'));
+    }
+    $(document).ready(function () {
+        {% if updateform %}
+        alert('Updated!');
+        {% endif %}
+    });
+    //--></script>
