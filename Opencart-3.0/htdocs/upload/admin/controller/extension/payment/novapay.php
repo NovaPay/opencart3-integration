@@ -286,10 +286,6 @@ class ControllerExtensionPaymentNovapay extends Controller
             $this->error['merchantid'] = $this->language->get('error_merchantid');
         }
 
-        if (!$this->request->post['payment_novapay_passprivate']) {
-            $this->error['passprivate'] = $this->language->get('error_passprivate');
-        }
-
         if (!$this->request->post['payment_novapay_publickey']) {
             $this->error['publickey'] = $this->language->get('error_publickey');
         }
