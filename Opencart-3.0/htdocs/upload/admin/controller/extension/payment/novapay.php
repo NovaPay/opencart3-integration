@@ -36,7 +36,7 @@ class ControllerExtensionPaymentNovapay extends Controller
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true));
+            $this->response->redirect($this->getRealLink('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true));
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -127,24 +127,24 @@ class ControllerExtensionPaymentNovapay extends Controller
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true),
+            'href' => $this->getRealLink('common/dashboard', 'user_token=' . $this->session->data['user_token'], true),
             'separator' => false
         );
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_extension'),
-            'href' => $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true)
+            'href' => $this->getRealLink('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true)
         );
 
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('extension/payment/novapay', 'user_token=' . $this->session->data['user_token'], true),
+            'href' => $this->getRealLink('extension/payment/novapay', 'user_token=' . $this->session->data['user_token'], true),
             'separator' => ' :: '
         );
 
-        $data['action'] = $this->url->link('extension/payment/novapay', 'user_token=' . $this->session->data['user_token'], true);
+        $data['action'] = $this->getRealLink('extension/payment/novapay', 'user_token=' . $this->session->data['user_token'], true);
 
-        $data['cancel'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true);
+        $data['cancel'] = $this->getRealLink('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true);
 
 
         if (isset($this->request->post['payment_novapay_merchantid'])) {
@@ -348,7 +348,7 @@ class ControllerExtensionPaymentNovapay extends Controller
         } else $data['cancel'] = false;
 
         //$data['test'] = $this->setChose($order_statuses->row['order_status_id']);
-        $data['action_url'] = $this->url->link('extension/payment/novapay/updateOrder&user_token=' . $this->request->get['user_token'], '', 'SSL');
+        $data['action_url'] = $this->getRealLink('extension/payment/novapay/updateOrder&user_token=' . $this->request->get['user_token'], '', 'SSL');
         $data['action_url'] = (strpos($_SERVER['SERVER_PROTOCOL'], 'HTTP/1.0') === FALSE ?'https://' : 'http://'). $_SERVER['SERVER_NAME'] .'/index.php?route=extension/payment/novapay/updateOrder';
         return $this->load->view('extension/payment/novapay_order', $data);
     }
@@ -373,6 +373,20 @@ class ControllerExtensionPaymentNovapay extends Controller
             return true;
         }
         return false;
+    }
+
+    /**
+     * Returns proper URL for controllers.
+     * 
+     * @param string $route  Route URI.
+     * @param string $args   Query arguments.
+     * @param bool   $secure Is secure?
+     * 
+     * @return string        The URL.
+     */
+    protected function getRealLink($route, $args = '', $secure = false)
+    {
+        return urldecode($this->url->link($route, $args, $secure));
     }
 
 }
