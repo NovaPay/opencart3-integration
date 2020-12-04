@@ -140,7 +140,7 @@ class ControllerExtensionPaymentNovapay extends Controller
         'order_id' => $orderId,
       ]
     );
-    $postback = $this->url->link('extension/payment/novapay/postBack', '', 'SSL');
+    $postback = urldecode($this->url->link('extension/payment/novapay/postBack', '', 'SSL'));
     $success_url = $this->config->get('payment_novapay_successurl') ? $this->config->get('payment_novapay_successurl') : (strpos($_SERVER['SERVER_PROTOCOL'], 'HTTP/1.0') === FALSE ?'https://' : 'http://') . $_SERVER['SERVER_NAME'] . '/index.php?route=extension/payment/novapay/success';
     $fail_url = $this->config->get('payment_novapay_failurl') ? $this->config->get('payment_novapay_failurl') : (strpos($_SERVER['SERVER_PROTOCOL'], 'HTTP/1.0') === FALSE ?'https://' : 'http://') . $_SERVER['SERVER_NAME'] .  '/index.php?route=extension/payment/novapay/failed';
     $merchant_id = $this->config->get('payment_novapay_merchantid');
