@@ -60,4 +60,14 @@ class Product extends Schema
         $this->price       = sprintf('%.2f', floatval(trim($price)));
         $this->count       = trim($count);
     }
+
+    /**
+     * Returns TRUE if price equals zero, otherwise FALSE.
+     * 
+     * @return bool
+     */
+    public function isZero()
+    {
+        return 0 == floatval($this->price);
+    }
 }

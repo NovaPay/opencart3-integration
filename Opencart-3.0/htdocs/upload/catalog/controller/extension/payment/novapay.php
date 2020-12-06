@@ -206,28 +206,13 @@ class ControllerExtensionPaymentNovapay extends Controller
             }
         }
 
-        $items = [];
-        $weight = 0;
-        $amount = 0;
-        foreach ($products as $item) {
-            $items[] = new Product($item['name'], $item['price'], intval($item['total']) / intval($item['price']));
-            $amount += $item['total'];
-            $weight += 1;
-        }
-
-        foreach ($total_data['totals'] as $total) {
-            if (floatval($total['value']) > 0 && stripos($total['title'], 'Total') === false) {
-                $items[] = new Product($total['title'], floatval($total['value']), 1);
-            }
-        }
-
-
-        $delivery = new Delivery(
-            $weight * 1.1,
-            30 * 20 * 5 / 5000,
-            $order_info['payment_city'] . ', ' . $order_info['payment_address_2'],
-            $order_info['payment_address_1']
-        );
+        // not used in v1.0.*
+        // $delivery = new Delivery(
+        //     $weight * 1.1,
+        //     30 * 20 * 5 / 5000,
+        //     $order_info['payment_city'] . ', ' . $order_info['payment_address_2'],
+        //     $order_info['payment_address_1']
+        // );
 
         $client = new Client(
             strlen($order_info['payment_firstname']) > 0 ? $order_info['payment_firstname'] : null,
@@ -265,7 +250,7 @@ class ControllerExtensionPaymentNovapay extends Controller
         $ok = $payment->create(
             $merchant_id,
             $session->id,
-            $items,
+            $this->_getOrderRowsForApi($products),
             round($order_info['total'], 2),
             $payment_type == 2,
             $session->id
@@ -360,5 +345,51 @@ class ControllerExtensionPaymentNovapay extends Controller
     protected function getRealLink($route, $args = '', $secure = false)
     {
         return urldecode($this->url->link($route, $args, $secure));
+    }
+
+    /**
+     * Returns rows required for Payment API.
+     * 
+     * @param array $products Array of products in order.
+     * 
+     * @return array
+     */
+    private function _getOrderRowsForApi($products = [])
+    {
+        $items = [];
+        if (is_array($products)) {
+            foreach ($products as $item) {
+                if (floatval($item['price']) <= 0) {
+                    continue;
+                }
+                $quantity = intval($item['total']) / intval($item['price']);
+                $product = new Product(
+                    $item['name'], 
+                    $item['price'], 
+                    $quantity
+                );
+                if ($product->isZero()) {
+                    continue;
+                }
+                $items[] = $product;
+            }
+        }
+
+        $shipping = new Product(
+            $this->session->data['shipping_method']['title'],
+            $this->session->data['shipping_method']['cost'],
+            1
+        );
+        if (!$shipping->isZero()) {
+            $items[] = $shipping;
+        }
+
+        // foreach ($total_data['totals'] as $total) {
+        //     if (floatval($total['value']) > 0 && stripos($total['title'], 'Total') === false) {
+        //         $items[] = new Product($total['title'], floatval($total['value']), 1);
+        //     }
+        // }
+
+        return $items;
     }
 }
