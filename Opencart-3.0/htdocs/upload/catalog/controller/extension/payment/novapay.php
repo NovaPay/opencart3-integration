@@ -77,7 +77,11 @@ class ControllerExtensionPaymentNovapay extends Controller
                 $error = $this->language->get('payment_type_error');
             }
         }
-        header("Location: " . $_SERVER["HTTP_REFERER"] . '&error=' . urlencode($error));
+        if($error !== '') {
+            $this->response->redirect($_SERVER["HTTP_REFERER"]  . '&error=' . urlencode($error));
+        } else {
+            $this->response->redirect($_SERVER["HTTP_REFERER"]);
+        }
     }
 
     public function setChose($status)
@@ -335,11 +339,11 @@ class ControllerExtensionPaymentNovapay extends Controller
 
     /**
      * Returns proper URL for controllers.
-     * 
+     *
      * @param string $route  Route URI.
      * @param string $args   Query arguments.
      * @param bool   $secure Is secure?
-     * 
+     *
      * @return string        The URL.
      */
     protected function getRealLink($route, $args = '', $secure = false)
@@ -349,9 +353,9 @@ class ControllerExtensionPaymentNovapay extends Controller
 
     /**
      * Returns rows required for Payment API.
-     * 
+     *
      * @param array $products Array of products in order.
-     * 
+     *
      * @return array
      */
     private function _getOrderRowsForApi($products = [])
@@ -364,8 +368,8 @@ class ControllerExtensionPaymentNovapay extends Controller
                 }
                 $quantity = intval($item['total']) / intval($item['price']);
                 $product = new Product(
-                    $item['name'], 
-                    $item['price'], 
+                    $item['name'],
+                    $item['price'],
                     $quantity
                 );
                 if ($product->isZero()) {
