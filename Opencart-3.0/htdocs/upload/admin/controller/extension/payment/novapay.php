@@ -348,8 +348,8 @@ class ControllerExtensionPaymentNovapay extends Controller
         } else $data['cancel'] = false;
 
         //$data['test'] = $this->setChose($order_statuses->row['order_status_id']);
-        $data['action_url'] = $this->getRealLink('extension/payment/novapay/updateOrder&user_token=' . $this->request->get['user_token'], '', 'SSL');
-        $data['action_url'] = (strpos($_SERVER['SERVER_PROTOCOL'], 'HTTP/1.0') === FALSE ?'https://' : 'http://'). $_SERVER['SERVER_NAME'] .'/index.php?route=extension/payment/novapay/updateOrder';
+        //$data['action_url'] = $this->getRealLink('extension/payment/novapay/updateOrder&user_token=' . $this->request->get['user_token'], '', 'SSL');
+        $data['action_url'] = ($_SERVER['HTTPS'] ?'https://' : 'http://'). $_SERVER['SERVER_NAME'] .'/index.php?route=extension/payment/novapay/updateOrder';
         return $this->load->view('extension/payment/novapay_order', $data);
     }
 
@@ -377,11 +377,11 @@ class ControllerExtensionPaymentNovapay extends Controller
 
     /**
      * Returns proper URL for controllers.
-     * 
+     *
      * @param string $route  Route URI.
      * @param string $args   Query arguments.
      * @param bool   $secure Is secure?
-     * 
+     *
      * @return string        The URL.
      */
     protected function getRealLink($route, $args = '', $secure = false)
