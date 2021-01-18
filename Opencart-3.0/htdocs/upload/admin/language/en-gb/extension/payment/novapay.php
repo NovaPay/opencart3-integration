@@ -6,6 +6,15 @@ $_['text_edit']              = 'Edit configuration';
 // Text
 $_['text_extension']	    = 'Extensions';
 $_['text_success']        = 'Success: You have modified payment module!';
+$_['invoice'] = 'Invoice number';
+$_['text_city'] = 'City';
+$_['text_depart'] = 'Department';
+$_['cancel_name'] = 'Cancel Payment';
+$_['check_name'] = 'Check Status';
+$_['confirm_name'] = 'Confirm Hold';
+$_['change_dep'] = 'Change department';
+$_['complete_name'] = 'Complete Hold';
+$_['pdf_name'] = 'Print PDF';
 $_['text_novapay']      = '<img src="view/image/payment/novapay.png" alt="" title="" style="border: 1px solid #EEEEEE;" />';
 
 // Entry

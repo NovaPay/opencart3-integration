@@ -143,5 +143,10 @@ class Warehouse extends Schema
      */
     public $Schedule;
 
+    /**
+     * Type of Warehouse
+     *
+     * @var WarehouseType
+     */
     public $type; 
 }

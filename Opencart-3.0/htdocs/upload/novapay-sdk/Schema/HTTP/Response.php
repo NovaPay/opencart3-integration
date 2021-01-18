@@ -140,13 +140,14 @@ class Response extends Schema
     /**
      * Returns the header by it's key if exists and FALSE if does not.
      * 
-     * @param string $key Header key.
+     * @param string $key       Header key.
+     * @param bool   $valueOnly If TRUE returns only header value, otherwise object.
      * 
-     * @return mixed      Header object if found, FALSE otherwise.
+     * @return mixed            Header object|value if found, FALSE otherwise.
      */
-    public function getHeader($key)
+    public function getHeader($key, $valueOnly = false)
     {
-        return $this->_headers->get($key);
+        return $this->_headers->get($key, $valueOnly);
     }
 
     /**

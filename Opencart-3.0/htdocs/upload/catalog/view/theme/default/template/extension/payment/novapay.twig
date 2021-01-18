@@ -9,7 +9,7 @@
 </form>
 
 <script type="text/javascript"><!--
-    if(!$('#collapse-payment-method').hasClass('fixed')) {
+    if(!$('#collapse-payment-method').hasClass('fixed') && $('[value="novapay.novapay"]:checked').length == 0) {
         jQuery('[href="#collapse-payment-method"]').click();
         setTimeout(function() {
             jQuery('#button-payment-method').click();

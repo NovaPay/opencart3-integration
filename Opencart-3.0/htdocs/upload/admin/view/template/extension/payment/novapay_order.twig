@@ -2,16 +2,36 @@
 <div style="display: flex;flex-wrap: wrap">
     {% if cancel %}
     <div style="margin:10px;">
-        <button name="cancel" class="novapay-butt btn btn-danger">Cancel Payment</button>
+        <button name="cancel" class="novapay-butt btn btn-danger">{{cancel_name}}</button>
     </div>
     {% endif %}
     <div style="margin:10px;">
-        <button name="update" class="novapay-butt btn btn-primary">Check Status</button>
+        <button name="update" class="novapay-butt btn btn-primary">{{check_name}}</button>
     </div>
     {% if hold %}
     <div style="margin:10px;display: flex; align-items: center;width:100%;">
         <input style="height: 36px; margin-right: 10px; width: 138px;padding-left: 10px" name="amount-price" type="number" pattern="[0-9]+([\.,][0-9]+)?" step="0.01">
-        <button name="confirm" class="novapay-butt btn">Confirm Hold</button>
+        <button name="confirm" class="novapay-butt btn">{{complete_name}}</button>
+    </div>
+    {% endif %}
+    {% if holdPdf %}
+    <div style="margin:10px;display: flex; align-items: center;width:100%;">
+        <button name="hold_pdf" class="novapay-butt btn">{{confirm_name}}</button>
+    </div>
+    <!--<div style="width: 100%" class="depart-block">
+        <div style="margin:10px;display: flex; align-items: center;width:100%;">
+            <button data-city={{city}} data-depart={{depart}} name="change_depart" class="btn novapay-shipping-price">{{change_dep}}</button>
+        </div>
+    </div>-->
+    {% endif %}
+    {% if invoice %}
+    <div style="margin:10px;display: flex; align-items: center;width:100%;">
+        <p>{{invoice}}</p>
+    </div>
+    {% endif %}
+    {% if print %}
+    <div style="margin:10px;display: flex; align-items: center;width:100%;">
+        <button name="print_pdf" class="novapay-butt btn">{{pdf_name}}</button>
     </div>
     {% endif %}
 </div>
@@ -21,8 +41,16 @@
     <input type="hidden" name="amount" value="" />
     <input type="hidden" name="total" value="{{ total }}" />
     <input type="hidden" name="test" value="{{ test }}" />
+    <input type="hidden" name="token" value="{{ user_token }}" />
 </form>
 <script type="text/javascript"><!--
+
+    $('[name="change_depart"]').on('click', function(e) {
+        if($('.novapay-search').length < 1) {
+            $('.depart-block').append('<div class="novapay-search"><label>' + $(this).attr('data-city') + '</label><input type="text" class="novapay-search-city" /></div>');
+        }
+    });
+
     $(".novapay-butt").bind('click', function () {
         $('[name="button_name"]').val($(this).attr('name'));
         if($(this).attr('name') === 'confirm') {
@@ -31,8 +59,11 @@
                 $('[name="amount-price"]').css('border', '1px solid red');
                 return;
             } else $('[name="amount"]').val(amount_price);
+        } else if($(this).attr('name') === 'print_pdf') {
+            $('#updateForm').attr('target', '_blank');
         }
         $('#updateForm').submit();
+        $('#updateForm').removeAttr('target');
     });
     setTimeout(function() {
         var name = $('#history tbody tr:first td:eq(2)').text();
@@ -42,10 +73,14 @@
             }
         }
     }, 2000);
-    var params = location.search.split('&');
-    var error = params[params.length - 1].split('=');
-    if(error[0] === 'error' && error[1] !== '') {
-        alert(decodeURI(error[1]).replace(/\+/g, " ").replace('%3A', ':'));
+
+    var url = new URL(location);
+    var error = url.searchParams.get('error');
+    if (error) {
+        alert(error);
+        url.searchParams.delete('error');
+        // redirect without error, so if page is refreshed no error shown
+        location.replace(url.toString());
     }
     $(document).ready(function () {
         {% if updateform %}

@@ -1,6 +1,6 @@
 <?php
 /**
- * Cities get list response schema class.
+ * City GET response schema class.
  * 
  * PHP version 7.X
  * 
@@ -15,7 +15,7 @@
 namespace Novapay\Payment\SDK\Schema\Response\Delivery;
 
 /**
- * Cities get list response schema class.
+ * City GET response schema class.
  * 
  * @category SDK
  * @package  NovaPay
@@ -24,7 +24,7 @@ namespace Novapay\Payment\SDK\Schema\Response\Delivery;
  * @link     https://novapay.ua/
  * @link     https://devcenter.novaposhta.ua/docs/services/556d7ccaa0fe4f08e8f7ce43/operations/556d885da0fe4f08e8f7ce46
  */
-class CitiesGetResponse extends Response
+class CityGetResponse extends Response
 {
     public $success;
     public $data;
@@ -36,7 +36,7 @@ class CitiesGetResponse extends Response
     public $warningCodes;
     public $infoCodes;
 
-    public $items = [];
+    public $city = [];
 
     /**
      * Function called right after body is parsed and values are set.
@@ -49,12 +49,8 @@ class CitiesGetResponse extends Response
         if (!is_array($this->data)) {
             return;
         }
-        $this->items = [];
-        foreach ($this->data as $item) {
-            $model = new City();
-            $model->setValues($item);
-            // $this->items[] = $model;
-            $this->items[] = CityShort::fromCity($model);
-        }
+        $model = new City();
+        $model->setValues($item);
+        $this->city = CityShort::fromCity($model);
     }
 }

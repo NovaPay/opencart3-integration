@@ -63,10 +63,25 @@ class Header extends Schema
         $this->options = [];
         foreach ($values as $value) {
             $arr = explode('=', $value, 2);
-            $this->options[ucwords(trim($arr[0]))] = trim($arr[isset($arr[1]) ? 1 : 0]);
+            $key = ucwords(trim($arr[0]));
+            if (empty($key)) {
+                continue;
+            }
+            $this->options[$key] = trim($arr[isset($arr[1]) ? 1 : 0], "\"\t\n ");
         }
     }
 
+    /**
+     * Returns option value.
+     *
+     * @param string $name Option name.
+     *
+     * @return string|null Option value if exists, NULL otherwise.
+     */
+    public function getOption($name)
+    {
+        return $this->options[$name] ?? null;
+    }
 
     /**
      * Returns header key in title case format.

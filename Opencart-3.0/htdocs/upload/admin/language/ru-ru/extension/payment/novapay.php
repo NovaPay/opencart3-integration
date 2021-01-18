@@ -6,6 +6,15 @@ $_['text_edit']              = 'Изменить настройки';
 // Text
 $_['text_extension']	    = 'Расширения';
 $_['text_success']        = 'Вы успешно изменили настройки модуля';
+$_['invoice'] = 'Номер накладной';
+$_['text_city'] = 'Город';
+$_['text_depart'] = 'Отделение';
+$_['cancel_name'] = 'Отменить платеж';
+$_['check_name'] = 'Проверить статус';
+$_['confirm_name'] = 'Подтвердить';
+$_['change_dep'] = 'Изменить отделение';
+$_['complete_name'] = 'Завершить';
+$_['pdf_name'] = 'Напечатать ПДФ';
 $_['text_novapay']      = '<img src="view/image/payment/novapay.png" alt="" title="" style="border: 1px solid #EEEEEE;" />';
 
 // Entry

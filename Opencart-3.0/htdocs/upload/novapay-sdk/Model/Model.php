@@ -204,21 +204,49 @@ class Model implements ConfigurationInterface
         self::$_log[] = $command;
     }
 
+    /**
+     * Returns array of logs when tracing is enabled.
+     * 
+     * @return array Logs of curl requests.
+     */
     public static function getLog()
     {
         return self::$_log;
     }
 
+    /**
+     * Sets HTTP headers.
+     * 
+     * @param array $headers Array of HTTP headers.
+     * 
+     * @return void
+     */
     public function setHeaders($headers = [])
     {
         $this->_headers = $headers;
     }
 
+    /**
+     * Sets the header value.
+     * 
+     * @param string $key   Header name.
+     * @param string $value Header value.
+     * 
+     * @return void
+     */
     public function setHeader($key, $value)
     {
         $this->_headers[$key] = $value;
     }
 
+    /**
+     * Returns HTTP headers.
+     * 
+     * @param bool $as_curl_format If TRUE returns as array of strings.
+     *                             If FALSE returns as array of key > value.
+     * 
+     * @return array               HTTP headers.
+     */
     public function getHeaders($as_curl_format = false)
     {
         if (!$as_curl_format) {
@@ -406,11 +434,21 @@ class Model implements ConfigurationInterface
         self::$_publicKey = $key;
     }
 
+    /**
+     * Returns private key value.
+     * 
+     * @return string
+     */
     public static function getPrivateKey()
     {
         return self::$_privateKey;
     }
 
+    /**
+     * Returns public key value.
+     * 
+     * @return string
+     */
     public static function getPublicKey()
     {
         return self::$_publicKey;
@@ -504,16 +542,31 @@ class Model implements ConfigurationInterface
         return static::$_merchantId;
     }
 
+    /**
+     * Returns the status of tracing.
+     * 
+     * @return bool TRUE if tracing is enabled, FALSE if disabled.
+     */
     protected static function isTracing()
     {
         return (bool) self::$_tracing;
     }
 
+    /**
+     * Enables tracing to see the log with static::getLog()
+     * 
+     * @return void
+     */
     public static function enableTracing()
     {
         self::$_tracing = true;
     }
 
+    /**
+     * Disables tracing to see the log with static::getLog()
+     * 
+     * @return void
+     */
     public static function disableTracing()
     {
         self::$_tracing = false;

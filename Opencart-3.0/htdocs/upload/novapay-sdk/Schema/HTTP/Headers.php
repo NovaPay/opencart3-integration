@@ -128,16 +128,16 @@ class Headers extends Schema
     /**
      * Returns the header object|value by it's key if exists and FALSE if does not.
      * 
-     * @param string $key        Header key.
-     * @param bool   $only_value If TRUE returns only header value, otherwise object.
+     * @param string $key       Header key.
+     * @param bool   $valueOnly If TRUE returns only header value, otherwise object.
      * 
      * @return mixed      Header object|value if found, FALSE otherwise.
      */
-    public function get($key, $only_value = false)
+    public function get($key, $valueOnly = false)
     {
         return 
             array_key_exists($key, $this->headers) 
-            ? ($only_value ? $this->headers[$key]->value : $this->headers[$key])
+            ? ($valueOnly ? $this->headers[$key]->value : $this->headers[$key])
             : false;
     }
 

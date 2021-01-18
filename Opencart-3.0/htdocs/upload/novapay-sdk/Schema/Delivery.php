@@ -26,16 +26,19 @@ namespace Novapay\Payment\SDK\Schema;
  */
 class Delivery extends Schema
 {
+    const MIN_VOLUME = 0.0004;
+    const MIN_WEIGHT = 0.1;
+
     /**
-     * The volume weight.
+     * The volume in qubic meters (m³).
      * Minimum value is 0.0004.
      * 
-     * @var float $volume_weight Volume weight.
+     * @var float $volume_weight Volume.
      */
     public $volume_weight;
 
     /**
-     * The weight in kilograms.
+     * The weight in kilograms (kg).
      * Minimum value is 0.1.
      * 
      * @var float $weight Weight in kilograms.
@@ -71,8 +74,15 @@ class Delivery extends Schema
         $warehouse = null
     ) {
         $this->weight              = floor(floatval($weight) * 1000) / 1000;
-        $this->volume_weight       = floor(floatval($volume_weight) * 1000) / 1000;
+        $this->volume_weight       = floor(floatval($volume_weight) * 10000) / 10000;
         $this->recipient_city      = $city;
         $this->recipient_warehouse = $warehouse;
+
+        if ($this->weight < static::MIN_WEIGHT) {
+            $this->weight = static::MIN_WEIGHT;
+        }
+        if ($this->volume_weight < static::MIN_VOLUME) {
+            $this->volume_weight = static::MIN_VOLUME;
+        }
     }
 }

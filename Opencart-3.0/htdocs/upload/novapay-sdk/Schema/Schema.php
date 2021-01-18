@@ -39,17 +39,22 @@ class Schema implements \JsonSerializable
     /**
      * Sets the object properties.
      * 
-     * @param mixed $values An array or object of properties.
+     * @param mixed $values      An array or object of properties.
+     * @param bool  $onlyDefined If TRUE sets only values for defined properties,
+     *                           otherwise create new properties and set values.
      * 
-     * @return [type]
+     * @return void
      */
-    public function setValues($values)
+    public function setValues($values, $onlyDefined = false)
     {
         if (!is_array($values) && !is_object($values)) {
             throw new \Exception('Values MUST be array|object');
         }
         foreach ($values as $key => $value) {
             $key = trim($key);
+            if ($onlyDefined && !property_exists($this, $key)) {
+                continue;
+            }
             $this->$key = $value;
         }
     }

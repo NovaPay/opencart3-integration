@@ -1,7 +1,7 @@
 <?php
 /**
- * Session GET request schema class.
- * The data used in session post method.
+ * Delivery Waybill GET request schema class.
+ * The PDF document for the delivery method.
  * 
  * PHP version 7.X
  * 
@@ -14,14 +14,9 @@
 
 namespace Novapay\Payment\SDK\Schema\Request;
 
-use Novapay\Payment\SDK\Schema\Schema;
-use Novapay\Payment\SDK\Schema\Callback;
-use Novapay\Payment\SDK\Schema\Client;
-use Novapay\Payment\SDK\Schema\Metadata;
-
 /**
- * Session GET request schema class.
- * The client structure used in payment and session methods.
+ * Delivery Waybill GET request schema class.
+ * The PDF document for the delivery method.
  * 
  * @category SDK
  * @package  NovaPay
@@ -29,7 +24,7 @@ use Novapay\Payment\SDK\Schema\Metadata;
  * @license  https://github.com/NovaPay/prestashop-integration/blob/master/LICENSE MIT
  * @link     https://novapay.ua/
  */
-class SessionGetRequest extends Request
+class DeliveryWaybillGetRequest extends Request
 {
     /**
      * The merchant ID.
@@ -45,7 +40,7 @@ class SessionGetRequest extends Request
     public $session_id;
 
     /**
-     * SessionGetRequest constructor.
+     * DeliveryWaybillGetRequest constructor.
      * 
      * @param string $merchant_id Merchant ID.
      * @param string $session_id  Session ID.

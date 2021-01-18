@@ -1,0 +1,106 @@
+.novapay-loader {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff
+}
+
+.loader {
+    animation: spin 1s infinite linear;
+    border: solid 2vmin transparent;
+    border-radius: 50%;
+    border-right-color: #23a1d1;
+    border-top-color: #23a1d1;
+    box-sizing: border-box;
+    height: 20vmin;
+    left: calc(50% - 10vmin);
+    position: absolute;
+    top: calc(50% - 10vmin);
+    width: 20vmin;
+    z-index: 1;
+}
+
+.loader:after {
+    animation: spin 3s infinite linear;
+    border: solid 2vmin transparent;
+    border-radius: 50%;
+    border-right-color: #23a1d1;
+    border-top-color: #23a1d1;
+    box-sizing: border-box;
+    content: "";
+    height: 12vmin;
+    left: 2vmin;
+    position: absolute;
+    top: 2vmin;
+    width: 12vmin;
+}
+
+.loader:before {
+    animation: spin 2s infinite linear;
+    border: solid 2vmin transparent;
+    border-radius: 50%;
+    border-right-color: #23a1d1;
+    border-top-color: #23a1d1;
+    box-sizing: border-box;
+    content: "";
+    height: 16vmin;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 16vmin;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.novapay-search {
+    padding: 15px;
+    width: 200px;
+    position: relative
+}
+
+.novapay-search-city, .novapay-search-warehouse {
+    width: 100%;
+    padding-left: 10px;
+}
+
+.novapay-search label, .novapay-label-war {
+    padding-left: 0;
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+
+.novapay-label-war {
+    margin-top: 10px;
+}
+
+.novapay-cities {
+    top: 66px;
+}
+
+.novapay-warehouse, .novapay-cities {
+    max-height: 400px;
+    overflow: auto;
+    list-style: none;
+    padding: 0;
+    border: 1px solid #000;
+    position: absolute;
+    z-index: 1;
+    background: #fff;
+    width: calc(100% - 30px);
+}
+
+.novapay-cities li, .novapay-warehouse li {
+    padding: 10px;
+    cursor: pointer;
+}
+.novapay-cities li:hover, .novapay-warehouse li:hover {
+    background: #23a1d1;
+    color: #fff;
+}

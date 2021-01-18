@@ -15,6 +15,8 @@
 
 namespace Novapay\Payment\SDK\Schema\Request;
 
+use Novapay\Payment\SDK\Schema\Delivery;
+
 // @deprecated
 // use Novapay\Payment\SDK\Schema\Delivery;
 
@@ -68,8 +70,12 @@ class PaymentPostRequest extends Request
      * @var bool $use_hold TRUE when hold must be used, FALSE when direct.
      */
     public $use_hold = false;
-    // @deprecated
-    // public $delivery;
+    /**
+     * Delivery object {volume_weight, weight, recipient_city, recipient_warehouse}
+     * 
+     * @var Delivery
+     */
+    public $delivery;
     // @deprecated
     // public $identifier;
 
@@ -89,9 +95,8 @@ class PaymentPostRequest extends Request
         array $products,
         $amount,
         $use_hold = false,
-        $external_id = null
-        // @deprecated
-        // Delivery $delivery,
+        $external_id = null,
+        Delivery $delivery = null
         // @deprecated
         // $identifier = null
     ) {
@@ -101,8 +106,13 @@ class PaymentPostRequest extends Request
         $this->amount      = trim($amount);
         $this->use_hold    = (bool) $use_hold;
         $this->external_id = trim($external_id);
-        // @deprecated
-        // $this->delivery    = $delivery;
+        $this->delivery    = $delivery;
+        if ($this->delivery) {
+            $this->use_hold = true;
+        }
+        if (!$this->delivery) {
+            unset($this->delivery);
+        }
         // @deprecated
         // $this->identifier  = $identifier;
     }

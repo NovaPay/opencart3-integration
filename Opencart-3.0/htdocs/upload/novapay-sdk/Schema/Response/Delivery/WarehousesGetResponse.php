@@ -53,7 +53,8 @@ class WarehousesGetResponse extends Response
         foreach ($this->data as $item) {
             $model = new Warehouse();
             $model->setValues($item);
-            $this->items[] = $model;
+            // $this->items[] = $model;
+            $this->items[] = WarehouseShort::fromWarehouse($model);
         }
     }
 }

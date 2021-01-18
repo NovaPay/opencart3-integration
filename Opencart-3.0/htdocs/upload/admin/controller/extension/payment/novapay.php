@@ -14,8 +14,23 @@ class ControllerExtensionPaymentNovapay extends Controller
           `session_id` varchar(255) COLLATE utf8_bin NOT NULL,
           `order_id` varchar(255) COLLATE utf8_bin NOT NULL,
           `payment_type` varchar(255) COLLATE utf8_bin NOT NULL,
+          `invoice` varchar(255) COLLATE utf8_bin,
           PRIMARY KEY (`novapay_id`)
         )");
+
+        $res = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "novapay`");
+        $found = false;
+        foreach ($res->rows as $row) {
+            if ('invoice' === $row['Field']) {
+                $found = true;
+                break;
+            }
+        }
+        // migrate/upgrade imitation
+        if (!$found) {
+            $this->db->query("ALTER TABLE `" . DB_PREFIX . "novapay`
+            ADD invoice varchar(255) COLLATE utf8_bin");
+        }
     }
 
     public function index()
@@ -328,17 +343,27 @@ class ControllerExtensionPaymentNovapay extends Controller
 
     public function order()
     {
+        $this->load->language('extension/payment/novapay');
+
+        $data['cancel_name'] = $this->language->get('cancel_name');
+        $data['check_name'] = $this->language->get('check_name');
+        $data['confirm_name'] = $this->language->get('confirm_name');
+        $data['complete_name'] = $this->language->get('complete_name');
+        $data['pdf_name'] = $this->language->get('pdf_name');
+
         $data['order_id'] = intval($this->request->get['order_id']);
         $data['user_token'] = $this->request->get['user_token'];
 
         $order_statuses = $this->db->query("SELECT * FROM " . DB_PREFIX . "order WHERE order_id = '" . $data['order_id'] . "'");
         $order_status = $this->setChose($order_statuses->row['order_status_id']);
 
+        $orderNov = $this->db->query("SELECT * FROM " . DB_PREFIX . "novapay WHERE order_id = '" . $data['order_id'] . "' LIMIT 1");
+
         $order_oc = $this->db->query("SELECT * FROM " . DB_PREFIX . "order WHERE order_id = '" . $data['order_id'] . "' LIMIT 1");
 
         $data['total'] = $order_statuses->row['total'];
 
-        $data['hold'] = $this->isPaymentInHoldStatus($data['order_id'], $order_status);
+        $data['hold'] = $order_oc->row['shipping_method'] !== 'Novapay Shipping' && $this->isPaymentInHoldStatus($data['order_id'], $order_status);
 
         // if in ['paid', 'hold_confirmed', 'holded']
         //    && !['failed', 'processing_void', 'voided', 'expired']
@@ -346,6 +371,16 @@ class ControllerExtensionPaymentNovapay extends Controller
         if((((in_array($order_status, ['paid', 'processing_hold_completion'])) && date('m.d.y', strtotime($order_oc->row['date_added'])) == date('m.d.y')) || in_array($order_status, ['holded', 'hold_confirmed'])) && !in_array($order_status, ['failed', 'processing_void', 'voided', 'expired'])) {
             $data['cancel'] = true;
         } else $data['cancel'] = false;
+
+        $data = $this->showPrintPdfButton($data, $order_status, $orderNov);
+
+        if($order_oc->row['shipping_method'] == 'Novapay Shipping' && $order_status == 'holded' && $orderNov->row['invoice'] == null) {
+            $data['holdPdf'] = true;
+        } else $data['holdPdf'] = false;
+
+        if($orderNov->row['invoice']) {
+            $data['invoice'] = '<strong>' . $this->language->get('invoice') . '</strong> : ' . $orderNov->row['invoice'];
+        } else $data['invoice'] = false;
 
         //$data['test'] = $this->setChose($order_statuses->row['order_status_id']);
         //$data['action_url'] = $this->getRealLink('extension/payment/novapay/updateOrder&user_token=' . $this->request->get['user_token'], '', 'SSL');
@@ -389,4 +424,26 @@ class ControllerExtensionPaymentNovapay extends Controller
         return urldecode($this->url->link($route, $args, $secure));
     }
 
+    /**
+     * Decides to show Print PDF button or not.
+     * Shows only when Hold Confirmed, request by the customer
+     *
+     * @param array  $data         View data.
+     * @param string $order_status Order status.
+     * @param object $orderNov     Novapay order record.
+     *
+     * @link https://docs.google.com/spreadsheets/d/1TZ8KW0HtFe55EVFTCnyqg3b3uDSoaOKL0CAFSdH_r-o/edit#gid=0&range=C28
+     *
+     * @return array               View data.
+     */
+    protected function showPrintPdfButton(array $data, $order_status, $orderNov)
+    {
+        $data['print'] = false;
+        if (in_array($order_status, ['hold_confirmed'])) {
+            $data['print'] = true;
+            return $data;
+        }
+        return $data;
+    }
 }
+

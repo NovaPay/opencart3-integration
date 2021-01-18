@@ -16,9 +16,11 @@ namespace Novapay\Payment\SDK\Model\Delivery;
 
 use Novapay\Payment\SDK\Model\Model;
 use Novapay\Payment\SDK\Schema\Response\Delivery\Response;
+use Novapay\Payment\SDK\Schema\Request\Delivery\CityGetRequest;
+use Novapay\Payment\SDK\Schema\Response\Delivery\CityGetResponse;
+use Novapay\Payment\SDK\Schema\Response\Error\Error;
 use Novapay\Payment\SDK\Schema\Request\Delivery\CitiesGetRequest;
 use Novapay\Payment\SDK\Schema\Response\Delivery\CitiesGetResponse;
-use Novapay\Payment\SDK\Schema\Response\Error\Error;
 
 /**
  * Delivery Cities model class.
@@ -33,14 +35,38 @@ use Novapay\Payment\SDK\Schema\Response\Error\Error;
  */
 class Cities extends Model
 {
-    const MIN_LENGTH = 3;
-
     /**
-     * Payment processing URL to redirect user there.
+     * Cities of current search.
      * 
-     * @var string Processing URL.
+     * @var array Cities.
      */
     public $items = [];
+    public $city;
+
+    /**
+     * Mininum length of a city name to start search.
+     *
+     * @var int
+     */
+    private $_minLength = 3;
+
+    public function __construct($minLength = null)
+    {
+        parent::__construct();
+        if (null !== $minLength && intval($minLength) > 0) {
+            $this->_minLength = intval($minLength);
+        }
+    }
+
+    /**
+     * Returns minimum length of the search string to make a request.
+     *
+     * @return int
+     */
+    protected function getMinLengthToSearch()
+    {
+        return $this->_minLength;
+    }
 
     /**
      * Search for the cities by search term.
@@ -52,12 +78,12 @@ class Cities extends Model
     public function search($term = '')
     {
         $request = new CitiesGetRequest(Model::getMerchantId(), $term);
-        if (mb_strlen($term) < static::MIN_LENGTH) {
+        if (mb_strlen($term) < $this->getMinLengthToSearch()) {
             $error = Response::create(
                 '{"type": "' . Error::TYPE_VALIDATION . '", ' . 
                 '"errors": {"error": {"message": ' . 
                 '"FindByString - too few characters in search string. Minimum ' . 
-                static::MIN_LENGTH . ' characters."}}}', 
+                $this->getMinLengthToSearch() . ' characters."}}}', 
                 ['HTTP/1.1 400 Bad request', 'Content-Type: application/json']
             );
             $this->setResponse($error);
@@ -76,6 +102,33 @@ class Cities extends Model
         }
 
         $this->items = $res->items;
+
+        return true;
+    }
+
+    /**
+     * Finds for a city by it's reference ID.
+     *
+     * @param string $cityRef City Reference ID.
+     * 
+     * @return bool           TRUE on success, FALSE on failure.
+     */
+    public function get($cityRef)
+    {
+        $request = new CityGetRequest(Model::getMerchantId(), $cityRef);
+        $response = $this->send($request, 'POST', '/delivery-info');
+        $res = Response::create(
+            $response[1],
+            $response[0],
+            CityGetResponse::class
+        );
+        $this->setResponse($res);
+
+        if (!$res instanceof CityGetResponse) {
+            return false;
+        }
+
+        $this->city = $res->city;
 
         return true;
     }

@@ -14,6 +14,7 @@
 
 namespace Novapay\Payment\SDK\Model;
 
+use Novapay\Payment\SDK\Schema\Delivery;
 use Novapay\Payment\SDK\Schema\Request\PaymentDeleteRequest;
 use Novapay\Payment\SDK\Schema\Request\PaymentPostRequest;
 use Novapay\Payment\SDK\Schema\Request\PaymentPutRequest;
@@ -61,7 +62,8 @@ class Payment extends Model implements PaymentInterface
         array $products,
         $amount,
         $use_hold = false,
-        $external_id = null
+        $external_id = null,
+        Delivery $delivery = null
     ) {
         // POST /payment
         // Add payment to created session and optionaly initialize its processing
@@ -71,7 +73,8 @@ class Payment extends Model implements PaymentInterface
             $products,
             $amount,
             $use_hold,
-            $external_id
+            $external_id,
+            $delivery
         );
 
         $response = $this->send($request, 'POST', '/payment');

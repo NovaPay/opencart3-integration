@@ -46,9 +46,11 @@ class WarehousesGetRequest extends Request
      * @param string $merchant_id Merchant ID.
      * @param string $cityRef     City Reference.
      */
-    public function __construct($merchant_id, $cityRef) 
+    public function __construct($merchant_id, $cityRef, $limit = 50, $page = 1)
     {
         $this->merchant_id = $merchant_id;
         $this->methodProperties['CityRef'] = $cityRef;
+        $this->methodProperties['Limit']   = $limit;
+        $this->methodProperties['Page']    = $page;
     }
 }

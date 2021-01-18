@@ -20,7 +20,9 @@ use Novapay\Payment\SDK\Schema\Response\Delivery\Response;
 use Novapay\Payment\SDK\Schema\Request\Delivery\WarehousesGetRequest;
 use Novapay\Payment\SDK\Schema\Response\Delivery\WarehousesGetResponse;
 use Novapay\Payment\SDK\Schema\Response\Delivery\Warehouse;
+use Novapay\Payment\SDK\Schema\Response\Delivery\WarehouseShort;
 use Novapay\Payment\SDK\Schema\Response\Delivery\WarehouseType;
+use Novapay\Payment\SDK\Schema\Response\Delivery\WarehouseTypesGetResponse;
 
 /**
  * Delivery Warehouses model class.
@@ -35,6 +37,7 @@ use Novapay\Payment\SDK\Schema\Response\Delivery\WarehouseType;
  */
 class Warehouses extends Model
 {
+    const BATCH_LIMIT = 1000;
     /**
      * Payment processing URL to redirect user there.
      * 
@@ -42,18 +45,49 @@ class Warehouses extends Model
      */
     public $items = [];
 
+    /**
+     * Amount of the warehouses in the result.
+     * Used for pagination.
+     *
+     * @var int
+     */
+    public $count;
+
+    /**
+     * Current page.
+     *
+     * @var int
+     */
+    public $page;
+
+    /**
+     * Limit of items on the page.
+     *
+     * @var int
+     */
+    public $limit;
+
+    /**
+     * Count of the pages if more items than limit provided in the result.
+     *
+     * @var int
+     */
+    public $pagesCount;
+
     private static $_types = [];
 
     /**
      * Search for the warehouses by city reference id.
      * 
      * @param string $cityRef City reference id.
+     * @param int    $limit   Count of the items per page.
+     * @param int    $page    Current page number.
      * 
      * @return bool           TRUE on success, FALSE on failure.
      */
-    public function getByCityRef($cityRef)
+    public function getByCityRef($cityRef, $limit = 50, $page = 1)
     {
-        $request = new WarehousesGetRequest(Model::getMerchantId(), $cityRef);
+        $request = new WarehousesGetRequest(Model::getMerchantId(), $cityRef, $limit, $page);
         $response = $this->send($request, 'POST', '/delivery-info');
         $res = Response::create(
             $response[1],
@@ -66,14 +100,43 @@ class Warehouses extends Model
             return false;
         }
 
+        $this->count = $res->info->totalCount;
+        $this->limit = $limit;
+        $this->page  = $page;
+        $this->pagesCount = ceil($this->count / $limit);
+
         $this->items = $res->items;
         foreach ($this->items as $i => $item) {
-            if (!$item instanceof Warehouse) {
-                continue;
+            if ($item instanceof Warehouse) {
+                $type = static::getType($cityRef, $item->TypeOfWarehouse);
+                $item->type = $type ? $type->Description : null;
             }
-            $item->type = static::getType($item->CityRef, $item->TypeOfWarehouse);
+            $this->items[$i] = $item;
         }
 
+        return true;
+    }
+
+    /**
+     * Retrieves all warehouses by city reference id.
+     * 
+     * @param string $cityRef City reference id.
+     * 
+     * @return bool           TRUE on success, FALSE on failure.
+     */
+    public function all($cityRef)
+    {
+        $items = [];
+        $page = 1;
+        do {
+            $res = $this->getByCityRef($cityRef, static::BATCH_LIMIT, $page++);
+            if (!$res) {
+                return false;
+            }
+            $items = array_merge($items, $this->items);
+        } while ($page <= $this->pagesCount);
+
+        $this->items = $items;
         return true;
     }
 
