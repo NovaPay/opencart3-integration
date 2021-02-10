@@ -64,7 +64,7 @@ class ControllerExtensionPaymentNovapay extends Controller
         $data['text_all_zones'] = $this->language->get('text_all_zones');
 
         $data['entry_email'] = $this->language->get('entry_email');
-        $data['entry_order_status'] = $this->language->get('entry_order_status');
+        $data['entry_order_status_proc_void'] = $this->language->get('entry_order_status_proc_void');
         $data['entry_order_status_completed_text'] = $this->language->get('entry_order_status_completed_text');
         $data['entry_order_status_pending'] = $this->language->get('entry_order_status_pending');
         $data['entry_order_status_canceled'] = $this->language->get('entry_order_status_canceled');
@@ -353,11 +353,12 @@ class ControllerExtensionPaymentNovapay extends Controller
 
         $data['order_id'] = intval($this->request->get['order_id']);
         $data['user_token'] = $this->request->get['user_token'];
-
+        
         $order_statuses = $this->db->query("SELECT * FROM " . DB_PREFIX . "order WHERE order_id = '" . $data['order_id'] . "'");
         $order_status = $this->setChose($order_statuses->row['order_status_id']);
-
         $orderNov = $this->db->query("SELECT * FROM " . DB_PREFIX . "novapay WHERE order_id = '" . $data['order_id'] . "' LIMIT 1");
+        $data['novapay_status'] = $order_status;
+        $data['novapay_id'] = $orderNov->row['session_id'];
 
         $order_oc = $this->db->query("SELECT * FROM " . DB_PREFIX . "order WHERE order_id = '" . $data['order_id'] . "' LIMIT 1");
 

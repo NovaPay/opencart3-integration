@@ -19,7 +19,7 @@ $_['text_novapay']      = '<img src="view/image/payment/novapay.png" alt="" titl
 
 // Entry
 $_['entry_select_status'] = 'Select Payment Status';
-$_['entry_order_status']                = 'Payment Status Processing Void';
+$_['entry_order_status_proc_void']       = 'Payment Status Processing Void';
 $_['entry_order_status_created']         = 'Payment Status Created';
 $_['entry_order_status_expired']         = 'Payment Status Expired';
 $_['entry_order_status_processing']     = 'Payment Status Processing';

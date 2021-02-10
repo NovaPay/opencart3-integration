@@ -19,7 +19,7 @@ $_['text_novapay']      = '<img src="view/image/payment/novapay.png" alt="" titl
 
 // Entry
 $_['entry_select_status'] = 'Выберите Статус оплаты';
-$_['entry_order_status']                = 'Статус оплаты анулирован';
+$_['entry_order_status_proc_void']      = 'Статус оплаты анулирован';
 $_['entry_order_status_created']        = 'Статус оплаты создан';
 $_['entry_order_status_expired']        = 'Статус оплаты истечен';
 $_['entry_order_status_processing']     = 'Статус оплаты в процесе';

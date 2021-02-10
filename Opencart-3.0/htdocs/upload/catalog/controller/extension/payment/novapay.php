@@ -548,11 +548,7 @@ class ControllerExtensionPaymentNovapay extends Controller
 
         $postbackPostRequest = $postback->getRequest();
 
-
-        /*$content = json_encode($postbackPostRequest);
-        $fp = fopen($_SERVER['DOCUMENT_ROOT'] . "/amyfile.txt","a");
-        fwrite($fp,$content);
-        fclose($fp);*/
+        $this->logRequest($postbackPostRequest);
 
         if (!$postback->verify()) {
             $this->load->model('checkout/order');
@@ -569,6 +565,19 @@ class ControllerExtensionPaymentNovapay extends Controller
             $this->load->model('checkout/order');
             $this->model_checkout_order->addOrderHistory($orderId, $this->setChose($postbackPostRequest->status));
         }
+    }
+
+    /**
+     * Logs requests (postback from the begining).
+     *
+     * @param mixed $request Request object.
+     * 
+     * @return void
+     */
+    protected function logRequest($request)
+    {
+        $log = new Log('novapay-postback.log');
+        $log->write(json_encode($request) . "\n\n");
     }
 
     private function _language($lang_id)
