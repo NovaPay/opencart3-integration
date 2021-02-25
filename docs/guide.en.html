@@ -353,6 +353,52 @@ kbd {
 <ol>
 <li>Log in to Admin panel on your website, usually url is <code>https://your-webshop-domain.com/admin/</code>, but it might be changed in the configuration.<br>
 <img src="images/en/01-Admin-Login.png" alt="Admin Log in"></li>
+</ol>
+
+<h3 id="toc_3">Novapay delivery extension</h3>
+
+<ol>
+<li>Go to Extensions.
+
+<ul>
+<li>Click on <code>Extensions</code> in sidebar navigation<br>
+<img src="images/en/02-Admin-Menu-Extensions.png" alt="Stores"></li>
+<li>Select <code>Extension type</code> &gt; <code>Shipping</code> on opened page
+<img src="images/en/41-Admin-Extensions-Delivery.png" alt="Stores"></li>
+<li>Scroll down to <code>Novapay</code> delivery method
+<img src="images/en/42-Admin-Novapay-Delivery-settings.png" alt="Sales"></li>
+</ul></li>
+<li>Configure extension
+<img src="images/en/43-Admin-Novapay-Delivery-configure.png" alt="Configure">
+
+<ul>
+<li>Status <code>Enabled</code> or <code>Disabled</code>, enables or disables the extension</li>
+<li>Sort Order is number to sort shipping methods on checkout page from minimum to maximum (ascending)
+&gt; Dimensions and weight units are used from standard shop settings.</li>
+</ul></li>
+<li>After delivery method is configured you can follow orders with selected delivery methods to check a tracking number, print it, and track the package delivery.
+
+<ul>
+<li>Go to <code>Sales</code> &gt; <code>Orders</code>
+<img src="images/en/44-Admin-Orders.png" alt="Orders"></li>
+<li>View (click) one order with the Novapay delivery
+<img src="images/en/45-Admin-View-Order.png" alt="View order"></li>
+<li>Check the delivery information in the Order details block
+<img src="images/en/46-Admin-Check-Delivery.png" alt="Check info"></li>
+<li>Scroll down to <code>Order History</code> to and click on tab <code>Novapay</code>
+<img src="images/en/47-Admin-Tab-Novapay.png" alt="Tab Novapay"></li>
+<li>Click button <code>Confirm hold</code> when you are ready to delivery the Order
+<img src="images/en/48-Admin-Confirm-Hold.png" alt="Confirm hold"></li>
+<li>When hold is confirmed (you might click <code>Check Status</code>) you can see <code>Print PDF</code> button.
+<img src="images/en/49-Admin-Print-PDF.png" alt="Print PDF"></li>
+<li>To print transport document click on button <code>Print PDF</code>.
+<img src="images/en/50-Admin-PDF.png" alt="PDF"></li>
+</ul></li>
+</ol>
+
+<h3 id="toc_4">Novapay payment extension</h3>
+
+<ol>
 <li>Go to Extensions.
 
 <ul>
@@ -398,7 +444,27 @@ kbd {
 </ul></li>
 </ol>
 
-<h2 id="toc_3">Front store test</h2>
+<h2 id="toc_5">Front store test</h2>
+
+<h3 id="toc_6">Delivery module</h3>
+
+<ol>
+<li>Go to your front store and add some product in the shopping cart. Go to the checkout fill in the required information and go to step <code>Delivery Method</code>.</li>
+<li>Select <code>Novapay Shipping</code> and enter city name.
+<img src="images/en/49-Front-Delivery-Method.png" alt="Delivery method"></li>
+<li>When the city (or few first letters) is entered select the correct city from the autocomplete dropdown.
+<img src="images/en/50-Front-Select-City.png" alt="Select a city"></li>
+<li>Go to the next input <code>Department</code> and write number of department you need. Then select it from the autocomplete dropdown.
+<img src="images/en/51-Front-Select-Department.png" alt="Select a department"></li>
+<li>The shipping cost must be recalculated and updated.
+<img src="images/en/52-Front-Shipping-Cost.png" alt="Select a department"></li>
+<li>On the <code>Payment Method</code> step you can select only <code>Novapay payment</code>.
+<img src="images/en/53-Front-Select-Payment.png" alt="Select a department"></li>
+<li>After submitting a checkout form and redirected to Novapay payment processing page. Enter card details to pay. You can see the shipping cost on this page.
+<img src="images/en/54-Front-Payment-Processing.png" alt="Payment processing"></li>
+</ol>
+
+<h3 id="toc_7">Payment module</h3>
 
 <ol>
 <li>Go to your front store and add some product in the shopping cart. Go to the checkout page and complete <code>Delivery method</code> step and go to <code>Payment method</code>.<br>

@@ -345,10 +345,53 @@ kbd {
 <li>Загрузите файлы на сервер в корневую директорию интернет-магазина <code>htdocs/</code><br>
 <img src="images/en/22-FTP-Upload.png" alt="Check files on FTP"></li>
 </ul></li>
-<li>You can use any other available upload method, such as <code>ssh</code>, <code>hosting panel file manager</code>, etc.</li>
+<li>Вы можете использовать любой другой доступный метод загрузки, например <code>ssh</code>, <code>hosting panel file manager</code>, и другие.</li>
 </ol>
 
 <h2 id="toc_2">Настройка в панели администрирования</h2>
+
+<h3 id="toc_3">Модуль доставки Novapay</h3>
+
+<ol>
+<li>Перейдите в Расширения.
+
+<ul>
+<li>Нажмите на <code>Extensions</code> в боковой навигации<br>
+<img src="images/en/02-Admin-Menu-Extensions.png" alt="Stores"></li>
+<li>Выберите <code>Extension type</code> &gt; <code>Shipping</code> на открывшейся странице
+<img src="images/en/41-Admin-Extensions-Delivery.png" alt="Stores"></li>
+<li>Пролистайте вниз до метода оплаты <code>Novapay</code>
+<img src="images/en/42-Admin-Novapay-Delivery-settings.png" alt="Sales"></li>
+</ul></li>
+<li>Настройте расширение
+<img src="images/en/43-Admin-Novapay-Delivery-configure.png" alt="Configure">
+
+<ul>
+<li>Статус <code>Enabled</code> или <code>Disabled</code>, включает и выключает модуль</li>
+<li><code>Sort Order</code> число отвечающее за сортировку на странице оформления заказа среди таких же методов доставки.
+&gt; Единицы измерения размеров и веса взяты из стандартных настроек магазина.</li>
+</ul></li>
+<li>После настройки способа доставки вы можете следить за заказами с выбранными способами доставки, чтобы проверять номер отслеживания, распечатывать его и отслеживать доставку посылки.
+
+<ul>
+<li>Перейдите в <code>Sales</code> &gt; <code>Orders</code>
+<img src="images/en/44-Admin-Orders.png" alt="Orders"></li>
+<li>Посмотрите (кликните) один заказ с доставкой Novapay
+<img src="images/en/45-Admin-View-Order.png" alt="View order"></li>
+<li>Проверьте информацию о доставке в блоке Детали заказа.
+<img src="images/en/46-Admin-Check-Delivery.png" alt="Check info"></li>
+<li>Пролистайте вних до <code>Order History</code> и кликните таб <code>Novapay</code>
+<img src="images/en/47-Admin-Tab-Novapay.png" alt="Tab Novapay"></li>
+<li>Нажмите кнопку <code>Confirm hold</code> когда вы будете готовы отправить заказ
+<img src="images/en/48-Admin-Confirm-Hold.png" alt="Confirm hold"></li>
+<li>Когда удержание подтверждено (вы можете нажать <code>Check Status</code>), вы увидите кнопку <code>Print PDF</code>.
+<img src="images/en/49-Admin-Print-PDF.png" alt="Print PDF"></li>
+<li>Чтобы распечатать транспортный документ, нажмите кнопку <code>Print PDF</code>.
+<img src="images/en/50-Admin-PDF.png" alt="PDF"></li>
+</ul></li>
+</ol>
+
+<h3 id="toc_4">Модуль оплаты Novapay</h3>
 
 <ol>
 <li>Войдите в панель администратора на своем интернет магазине, обычно URL-адрес <code>https://your-webshop-domain.com/admin/</code>, но он может быть изменен в конфигурации.<br>
@@ -398,7 +441,27 @@ kbd {
 </ul></li>
 </ol>
 
-<h2 id="toc_3">Тестирование на стороне интернет магазина</h2>
+<h2 id="toc_5">Тестирование на стороне интернет магазина</h2>
+
+<h3 id="toc_6">Модуль доставки</h3>
+
+<ol>
+<li>Зайдите в свой магазин и добавьте товар в корзину. Зайдите в кассу, заполните необходимую информацию и перейдите к шагу <code>Delivery Method</code>.</li>
+<li>Выберите <code>Novapay Shipping</code> и введите название города.
+<img src="images/en/49-Front-Delivery-Method.png" alt="Delivery method"></li>
+<li>После ввода города (или нескольких первых букв) выберите правильный город из раскрывающегося списка автозаполнения.
+<img src="images/en/50-Front-Select-City.png" alt="Select a city"></li>
+<li>Перейдите к следующему входу <code>Отделение</code> и укажите номер нужного вам отделения. Затем выберите его в раскрывающемся списке автозаполнения.
+<img src="images/en/51-Front-Select-Department.png" alt="Select a department"></li>
+<li>Стоимость доставки должна пересчитаться и обновиться.
+<img src="images/en/52-Front-Shipping-Cost.png" alt="Select a department"></li>
+<li>На шаге <code>Payment Method</code> вы можете выбрать только <code>Novapay payment</code>.
+<img src="images/en/53-Front-Select-Payment.png" alt="Select a department"></li>
+<li>После отправки формы оформления заказа и перенаправления на страницу обработки платежей Novopay. Введите данные карты для оплаты. Стоимость доставки вы можете увидеть на этой странице.
+<img src="images/en/54-Front-Payment-Processing.png" alt="Payment processing"></li>
+</ol>
+
+<h3 id="toc_7">Модуль оплаты</h3>
 
 <ol>
 <li>Зайдите в свой магазин и добавьте товар в корзину. Перейдите на страницу оформления заказа и заполните <code>Delivery method</code> шаг и перейти к <code>Payment method</code>.<br>
