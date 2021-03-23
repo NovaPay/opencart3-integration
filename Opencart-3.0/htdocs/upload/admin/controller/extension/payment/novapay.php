@@ -338,7 +338,10 @@ class ControllerExtensionPaymentNovapay extends Controller
             $this->config->get('payment_novapay_processing_void_status_id') => 'processing_void',
             $this->config->get('payment_novapay_voided_status_id') => 'voided',
         );
-        return $statuses[$status];
+        if(isset($statuses[$status])) {
+            return $statuses[$status];
+        }
+        return null;
     }
 
     public function order()
@@ -353,9 +356,12 @@ class ControllerExtensionPaymentNovapay extends Controller
 
         $data['order_id'] = intval($this->request->get['order_id']);
         $data['user_token'] = $this->request->get['user_token'];
-        
+
         $order_statuses = $this->db->query("SELECT * FROM " . DB_PREFIX . "order WHERE order_id = '" . $data['order_id'] . "'");
         $order_status = $this->setChose($order_statuses->row['order_status_id']);
+        if(empty($order_status)) {
+            return;
+        }
         $orderNov = $this->db->query("SELECT * FROM " . DB_PREFIX . "novapay WHERE order_id = '" . $data['order_id'] . "' LIMIT 1");
         $data['novapay_status'] = $order_status;
         $data['novapay_id'] = $orderNov->row['session_id'];

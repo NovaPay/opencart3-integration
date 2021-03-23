@@ -44,14 +44,8 @@ class ControllerExtensionPaymentNovapay extends Controller
             $this->load->model('checkout/order');
             $error = '';
 
-            if (intval($this->config->get('payment_novapay_test_mode')) == 1) {
-                Model::disableLiveMode();
-            } else {
-                Model::enableLiveMode();
-                Model::setPassword($this->config->get('payment_novapay_passprivate'));
-            }
-            Model::setPrivateKey($this->config->get('payment_novapay_privatekey'));
-            Model::setPublicKey($this->config->get('payment_novapay_publickey'));
+            $this->initPaymentModel();
+
             $session = new Session();
             $session->id = $orders->row['session_id'];
 
@@ -67,7 +61,14 @@ class ControllerExtensionPaymentNovapay extends Controller
             }
         } else if ($butt == 'update') {
             $ok = $session->status($merchant_id);
-            $status = $this->setChose($session->getResponse()->status);
+            try {
+                $status = $this->setChose($session->getResponse()->status);
+            } catch(Exception $e) {
+                return;
+            }
+            if(empty($status)) {
+                return;
+            }
             if ($order_status != $status) {
                 $this->model_checkout_order->addOrderHistory($orderId, $status);
             }
@@ -129,7 +130,10 @@ class ControllerExtensionPaymentNovapay extends Controller
             'processing_void' => $this->config->get('payment_novapay_processing_void_status_id'),
             'voided' => $this->config->get('payment_novapay_voided_status_id'),
         );
-        return $statuses[$status];
+        if(isset($statuses[$status])) {
+            return $statuses[$status];
+        }
+        return null;
     }
 
     public function setChoseRev($status)
@@ -146,7 +150,10 @@ class ControllerExtensionPaymentNovapay extends Controller
             $this->config->get('payment_novapay_processing_void_status_id') => 'processing_void',
             $this->config->get('payment_novapay_voided_status_id') => 'voided',
         );
-        return $statuses[$status];
+        if(isset($statuses[$status])) {
+            return $statuses[$status];
+        }
+        return null;
     }
 
     public function index()
@@ -461,14 +468,7 @@ class ControllerExtensionPaymentNovapay extends Controller
             strlen($order_info['email']) > 0 ? $order_info['email'] : null
         );
 
-        if (intval($this->config->get('payment_novapay_test_mode')) == 1) {
-            Model::disableLiveMode();
-        } else {
-            Model::enableLiveMode();
-            Model::setPassword($this->config->get('payment_novapay_passprivate'));
-        }
-        Model::setPrivateKey($this->config->get('payment_novapay_privatekey'));
-        Model::setPublicKey($this->config->get('payment_novapay_publickey'));
+        $this->initPaymentModel();
 
         $callback = new Callback($postback, $success_url, $fail_url);
 
@@ -527,16 +527,27 @@ class ControllerExtensionPaymentNovapay extends Controller
         return $order_info['shipping_method'] == 'Novapay Shipping';
     }
 
-    public function postBack()
-    {
-        if (intval($this->config->get('payment_novapay_test_mode')) == 1) {
+    /**
+     * Initializes SDK model to work with the payment.
+     *
+     * @return void
+     */
+    protected function initPaymentModel() {
+        if (intval($this->config->get('payment_novapay_test_mode'))) {
             Model::disableLiveMode();
         } else {
             Model::enableLiveMode();
-            Model::setPassword($this->config->get('payment_novapay_passprivate'));
         }
+        Model::setPassword($this->config->get('payment_novapay_passprivate'));
         Model::setPrivateKey($this->config->get('payment_novapay_privatekey'));
         Model::setPublicKey($this->config->get('payment_novapay_publickey'));
+
+        $this->logRequest("Test mode: " . intval($this->config->get('payment_novapay_test_mode')));
+    }
+
+    public function postBack()
+    {
+        $this->initPaymentModel();
 
         $postback = new Postback(
             file_get_contents('php://input'), // data
@@ -571,7 +582,7 @@ class ControllerExtensionPaymentNovapay extends Controller
      * Logs requests (postback from the begining).
      *
      * @param mixed $request Request object.
-     * 
+     *
      * @return void
      */
     protected function logRequest($request)
