@@ -142,8 +142,6 @@ class RSA
 
         $ok = $this->_getPublicKey() === $details['key'];
 
-        openssl_free_key($key);
-
         return $ok;
     }
 
@@ -157,12 +155,10 @@ class RSA
         $signature = null;
         try {
             $key = openssl_pkey_get_private(
-                $this->_getPrivateKey(), 
+                $this->_getPrivateKey(),
                 $this->_getPassword()
             );
             openssl_sign($this->data, $signature, $key, $this->_algorithm);
-
-            openssl_free_key($key);
         } catch (\Exception $e) {
             throw new \Exception("Cannot sign RSA key: {$e->getMessage()}", 500, $e);
         }
@@ -191,8 +187,6 @@ class RSA
     {
         $key = openssl_pkey_get_public($this->_getPublicKey());
         $ok = openssl_verify($this->data, $signature, $key, $this->_algorithm);
-
-        openssl_free_key($key);
 
         return 1 === $ok ? true : (-1 === $ok ? null : false);
     }

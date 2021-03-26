@@ -89,7 +89,6 @@ class ControllerExtensionPaymentNovapay extends Controller
                 $error = $this->language->get('payment_type_error');
             }
         } else if ($butt == 'hold_pdf') {
-            Model::setMerchantId($this->config->get('payment_novapay_merchantid'));
             $delivery = new Delivery();
             $res = $delivery->confirm($orders->row['session_id']);
             if ($res) {
@@ -97,15 +96,12 @@ class ControllerExtensionPaymentNovapay extends Controller
                 $this->db->query("UPDATE " . DB_PREFIX . "novapay SET invoice = '" . $resp->express_waybill . "' WHERE session_id = '" . $session->id . "'");
             }
         } else {
-            /*Model::enableTracing();*/
-            Model::setMerchantId($this->config->get('payment_novapay_merchantid'));
             $delivery = new Delivery();
             $resWaybill = $delivery->waybill($orders->row['session_id']);
             if ($resWaybill) {
                 header('Content-Type: application/pdf');
                 echo $delivery->pdfContent;
                 exit;
-                /*var_dump(Model::getLog());*/
             } else $error = $this->language->get('pdf_type_error');
         }
         if ($error !== '') {
@@ -244,8 +240,8 @@ class ControllerExtensionPaymentNovapay extends Controller
             $deliveryArray['total'],
             $deliveryArray['volume'],
             $deliveryArray['weight'],
-            $_POST['city_ref'], // $city->Ref,
-            $_POST['house_ref'], // $house->Ref
+            $_POST['city_ref'],
+            $_POST['house_ref']
         );
         $this->session->data['city_ref'] = $_POST['city_ref'];
         $this->session->data['house_ref'] = $_POST['house_ref'];
@@ -275,9 +271,7 @@ class ControllerExtensionPaymentNovapay extends Controller
     {
         $this->load->language('extension/payment/novapay');
 
-        Model::setPrivateKey($this->config->get('payment_novapay_privatekey'));
-        Model::setPublicKey($this->config->get('payment_novapay_publickey'));
-        Model::setMerchantId($this->config->get('payment_novapay_merchantid'));
+        $this->initPaymentModel();
 
         $method = $_POST['type'] . 'Action';
         if (in_array($method, $this->getAllowedShippingActions())) {
@@ -288,61 +282,6 @@ class ControllerExtensionPaymentNovapay extends Controller
         }
         echo $this->session->data['shipping_method']['cost'];
 
-    }
-
-    /**
-     * Returns order id from session or from last order with the same first/last name
-     *
-     * @return int
-     */
-    private function getOrderId()
-    {
-        // $sql = sprintf(
-        //     "SELECT * FROM %sorder
-        //      WHERE 'firstname'='%s' AND 'lastname' = '%s'
-        //      ORDER BY order_id DESC LIMIT 1",
-        //     DB_PREFIX,
-        //     // addslashes($this->session->data['shipping_address']['firstname']),
-        //     // addslashes($this->session->data['shipping_address']['lastname'])
-        //     'Iaroslav',
-        //     'Glodov'
-        // );
-        // $order = $this->db->query($sql);
-        // jsonExit([$sql, $order]);
-        $orderId = null;
-
-        if (empty($this->session->data['order_id'])) {
-            // $order = $this->db->query(
-            //     "SELECT * FROM " . DB_PREFIX . "order WHERE 'firstname'='" .
-            //     $this->session->data['shipping_address']['firstname'] .
-            //     "' and 'lastname'='" .
-            //     $this->session->data['shipping_address']['lastname'] .
-            //     "' ORDER BY order_id DESC LIMIT 1"
-            // );
-            $sql = sprintf(
-                "SELECT * FROM %sorder
-                 WHERE firstname='%s' AND lastname = '%s'
-                 ORDER BY order_id DESC LIMIT 1",
-                DB_PREFIX,
-                addslashes($this->session->data['shipping_address']['firstname']),
-                addslashes($this->session->data['shipping_address']['lastname'])
-            );
-
-            $order = $this->db->query($sql);
-            if (count($order->row)) {
-                $orderId = $order->row['order_id'];
-            } else {
-                $order = $this->db->query("SELECT * FROM " . DB_PREFIX . "order ORDER BY order_id DESC LIMIT 1");
-                $orderId = intval($order->row['order_id']) + 1;
-            }
-        } else {
-            $orderId = $this->session->data['order_id'];
-        }
-
-        if (!empty($_POST['admin'])) {
-            $orderId = $_POST['admin'];
-        }
-        return $orderId;
     }
 
     /**
@@ -541,6 +480,7 @@ class ControllerExtensionPaymentNovapay extends Controller
         Model::setPassword($this->config->get('payment_novapay_passprivate'));
         Model::setPrivateKey($this->config->get('payment_novapay_privatekey'));
         Model::setPublicKey($this->config->get('payment_novapay_publickey'));
+        Model::setMerchantId($this->config->get('payment_novapay_merchantid'));
 
         $this->logRequest("Test mode: " . intval($this->config->get('payment_novapay_test_mode')));
     }
@@ -554,7 +494,7 @@ class ControllerExtensionPaymentNovapay extends Controller
             apache_request_headers(),         // headers
             isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET',
             isset($_SERVER['REDIRECT_STATUS']) ? $_SERVER['REDIRECT_STATUS'] : 200,
-            isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1',
+            isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1'
         );
 
         $postbackPostRequest = $postback->getRequest();
