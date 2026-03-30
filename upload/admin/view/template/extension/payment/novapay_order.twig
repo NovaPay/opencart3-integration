@@ -1,0 +1,63 @@
+<div style="display: flex;flex-wrap: wrap">
+    {% if isHold %}
+        <div style="margin:10px;display: flex; align-items: center;width:100%;">
+            <input style="height: 36px; margin-right: 10px; width: 138px;padding-left: 10px" name="confirm-hold-amount" type="number" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" value="{{ total }}">
+            <button name="novapay-confirm-hold" class="novapay-butt btn btn-danger">{{complete_name}}</button>
+        </div>
+    {% endif %}
+    <div style="margin:10px;display: flex; align-items: center;width:100%;">
+        <button name="novapay-cancel-payment" class="novapay-butt btn btn-danger">{{cancel_name}}</button>
+    </div>
+</div>
+<form method="POST" id="updateForm" action="{{ action_url }}">
+    <input type="hidden" name="order_id" value="{{ order_id }}"/>
+    <input type="hidden" name="button_name" value="" />
+    <input type="hidden" name="amount" value="" />
+    <input type="hidden" name="total" value="{{ total }}" />
+    <input type="hidden" name="user_token" value="{{ user_token }}" />
+</form>
+<script type="text/javascript"><!--
+
+    $('[name="change_depart"]').on('click', function(e) {
+        if($('.novapay-search').length < 1) {
+            $('.depart-block').append('<div class="novapay-search"><label>' + $(this).attr('data-city') + '</label><input type="text" class="novapay-search-city" /></div>');
+        }
+    });
+
+    $(".novapay-butt").bind('click', function () {
+        $('[name="button_name"]').val($(this).attr('name'));
+        if($(this).attr('name') === 'confirm') {
+            var amount_price = parseFloat($('[name="amount-price"]').val().replace(',', '.'));
+            if((amount_price === '' || !(amount_price > 0)) || amount_price > parseFloat($('[name="total"]').val()).toFixed(2)) {
+                $('[name="amount-price"]').css('border', '1px solid red');
+                return;
+            } else $('[name="amount"]').val(amount_price);
+        } else if($(this).attr('name') === 'print_pdf') {
+            $('#updateForm').attr('target', '_blank');
+        }
+        $('#updateForm').submit();
+        $('#updateForm').removeAttr('target');
+    });
+    setTimeout(function() {
+        var name = $('#history tbody tr:first td:eq(2)').text();
+        for(var i = 0; i < $('#input-order-status option').length; i++) {
+            if($('#input-order-status option').eq(i).text() == name) {
+                $('#input-order-status').val($('#input-order-status option').eq(i).val());
+            }
+        }
+    }, 2000);
+
+    var url = new URL(location);
+    var error = url.searchParams.get('error');
+    if (error) {
+        alert(error);
+        url.searchParams.delete('error');
+        // redirect without error, so if page is refreshed no error shown
+        location.replace(url.toString());
+    }
+    $(document).ready(function () {
+        {% if updateform %}
+        alert('Updated!');
+        {% endif %}
+    });
+    //--></script>

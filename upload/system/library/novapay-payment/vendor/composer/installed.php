@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'name' => '__root__',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '61c255ef4929e63b9dd4f91daeecbf34a459ebd3',
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => true,
+    ),
+    'versions' => array(
+        '__root__' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '61c255ef4929e63b9dd4f91daeecbf34a459ebd3',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'giggsey/libphonenumber-for-php-lite' => array(
+            'pretty_version' => '9.0.22',
+            'version' => '9.0.22.0',
+            'reference' => 'f7fbfd48dc7bc7039214533d11b0e3bc07e9a3d0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../giggsey/libphonenumber-for-php-lite',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'symfony/polyfill-mbstring' => array(
+            'pretty_version' => 'v1.33.0',
+            'version' => '1.33.0.0',
+            'reference' => '6d857f4d76bd4b343eac26d6b539585d2bc56493',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/polyfill-mbstring',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+    ),
+);

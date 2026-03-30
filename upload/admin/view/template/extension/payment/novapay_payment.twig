@@ -1,0 +1,328 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-novapay_payment" name="apply" class="btn btn-success"><i class="fa fa-check"></i></button>
+        <button type="submit" form="form-novapay_payment" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+      <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+      </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+
+        <ul class="nav nav-tabs" id="tabs">
+          <li class="active"><a href="#tab-account" data-toggle="tab">{{ tab_account }}</a></li>
+          <li><a href="#tab-order-status" data-toggle="tab">{{ tab_order_status }}</a></li>
+          {#          <li><a href="#tab-export-operations" data-toggle="tab">{{ tab_export_operations }}</a></li>#}
+        </ul>
+
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-novapay_payment" class="form-horizontal">
+          <div class="tab-content">
+
+            <div class="tab-pane active" id="tab-account">
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+                <div class="col-sm-10">
+                  <select name="payment_novapay_payment_status" id="input-status" class="form-control">
+                    {% if payment_novapay_payment_status %}
+                      <option value="1" selected="selected">{{ text_enabled }}</option>
+                      <option value="0">{{ text_disabled }}</option>
+                    {% else %}
+                      <option value="1">{{ text_enabled }}</option>
+                      <option value="0" selected="selected">{{ text_disabled }}</option>
+                    {% endif %}
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-sort-order">{{ entry_sort_order }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_novapay_payment_checkout_sort_order" value="{{ payment_novapay_payment_checkout_sort_order }}" placeholder="{{ entry_sort_order }}" id="input-sort-order" class="form-control" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-status"><span data-toggle="tooltip" title="{{ entry_is_test_mode_help }}">{{ entry_is_test_mode }}</span></label>
+                <div class="col-sm-10">
+                  <select name="payment_novapay_payment_is_test_mode" id="input-status" class="form-control">
+                    {% if payment_novapay_payment_is_test_mode %}
+                      <option value="1" selected="selected">{{ text_enabled }}</option>
+                      <option value="0">{{ text_disabled }}</option>
+                    {% else %}
+                      <option value="1">{{ text_enabled }}</option>
+                      <option value="0" selected="selected">{{ text_disabled }}</option>
+                    {% endif %}
+                  </select>
+                </div>
+
+                <label class="col-sm-2 control-label" for="input-status"><span data-toggle="tooltip" title="{{ entry_is_log_help }}">{{ entry_is_log }}</span></label>
+                <div class="col-sm-10">
+                  <select name="payment_novapay_payment_is_log" id="input-status" class="form-control">
+                    {% if payment_novapay_payment_is_log %}
+                      <option value="1" selected="selected">{{ text_enabled }}</option>
+                      <option value="0">{{ text_disabled }}</option>
+                    {% else %}
+                      <option value="1">{{ text_enabled }}</option>
+                      <option value="0" selected="selected">{{ text_disabled }}</option>
+                    {% endif %}
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group required">
+                <label class="col-sm-2 control-label" for="input-vendor"><span data-toggle="tooltip" title="{{ entry_merchant_id_help }}">{{ entry_merchant_id }}</span></label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_novapay_payment_merchant_id" value="{{ payment_novapay_payment_merchant_id }}" placeholder="{{ entry_merchant_id }}" id="input-vendor" class="form-control" />
+                  {% if error_merchant_id %}
+                    <div class="text-danger">{{ error_merchant_id }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="form-group required">
+                <label class="col-sm-2 control-label" for="input-vendor">{{ entry_public_key }}</label>
+                <div class="col-sm-10">
+                  <textarea name="payment_novapay_payment_public_key" placeholder="{{ entry_public_key }}" id="input-vendor" class="form-control">{{ payment_novapay_payment_public_key }}</textarea>
+                  {% if error_publickey %}
+                    <div class="text-danger">{{ error_public_key }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="form-group required">
+                <label class="col-sm-2 control-label" for="input-vendor">{{ entry_private_key }}</label>
+                <div class="col-sm-10">
+                  <textarea name="payment_novapay_payment_private_key" placeholder="{{ entry_private_key }}" id="input-vendor" class="form-control">{{ payment_novapay_payment_private_key }}</textarea>
+                  {% if error_privatekey %}
+                    <div class="text-danger">{{ error_private_key }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="form-group required">
+                <label class="col-sm-2 control-label" for="input-vendor"><span data-toggle="tooltip" title="{{ entry_success_url_help }}">{{ entry_success_url }}</span></label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_novapay_payment_success_url" value="{{ payment_novapay_payment_success_url }}" placeholder="{{ entry_success_url }}" id="input-vendor" class="form-control" />
+                  {% if error_successurl %}
+                    <div class="text-danger">{{ error_success_url }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="form-group required">
+                <label class="col-sm-2 control-label" for="input-vendor"><span data-toggle="tooltip" title="{{ entry_fail_url_help }}">{{ entry_fail_url }}</span></label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_novapay_payment_fail_url" value="{{ payment_novapay_payment_fail_url }}" placeholder="{{ entry_fail_url }}" id="input-vendor" class="form-control" />
+                  {% if error_fail_url %}
+                    <div class="text-danger">{{ error_fail_url }}</div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-status"><span data-toggle="tooltip" title="{{ entry_is_hold }}">{{ entry_is_hold }}</span></label>
+                <div class="col-sm-10">
+                  <select name="payment_novapay_payment_is_hold" id="input-status" class="form-control">
+                    {% if payment_novapay_payment_is_hold %}
+                      <option value="1" selected="selected">{{ text_enabled }}</option>
+                      <option value="0">{{ text_disabled }}</option>
+                    {% else %}
+                      <option value="1">{{ text_enabled }}</option>
+                      <option value="0" selected="selected">{{ text_disabled }}</option>
+                    {% endif %}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane" id="tab-order-status">
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-order-status">{{ entry_order_status_Payment_Created }}</label>
+                <div class="col-sm-10">
+                  <select name="payment_novapay_payment_Payment_Created_status_id" id="input-order-status" class="form-control">
+                    <option disabled value="">{{ entry_select_status }}</option>
+                    {% for order_status in order_statuses %}
+                      {% if order_status.order_status_id == payment_novapay_payment_Payment_Created_status_id %}
+                        <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
+                      {% else %}
+                        <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-order-status">{{ entry_order_status_Payment_Expired }}</label>
+                <div class="col-sm-10">
+                  <select name="payment_novapay_payment_Payment_Expired_status_id" id="input-order-status" class="form-control">
+                    <option disabled value="">{{ entry_select_status }}</option>
+                    {% for order_status in order_statuses %}
+                      {% if order_status.order_status_id == payment_novapay_payment_Payment_Expired_status_id %}
+                        <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
+                      {% else %}
+                        <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-order-status">{{ entry_order_status_Payment_Processing }}</label>
+                <div class="col-sm-10">
+                  <select name="payment_novapay_payment_Payment_Processing_status_id" id="input-order-status" class="form-control">
+                    <option disabled value="">{{ entry_select_status }}</option>
+                    {% for order_status in order_statuses %}
+                      {% if order_status.order_status_id == payment_novapay_payment_Payment_Processing_status_id %}
+                        <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
+                      {% else %}
+                        <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-order-status">{{ entry_order_status_Payment_Holded }}</label>
+                <div class="col-sm-10">
+                  <select name="payment_novapay_payment_Payment_Holded_status_id" id="input-order-status" class="form-control">
+                    <option disabled value="">{{ entry_select_status }}</option>
+                    {% for order_status in order_statuses %}
+                      {% if order_status.order_status_id == payment_novapay_payment_Payment_Holded_status_id %}
+                        <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
+                      {% else %}
+                        <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-order-status">{{ entry_order_status_Payment_Paid }}</label>
+                <div class="col-sm-10">
+                  <select name="payment_novapay_payment_Payment_Paid_status_id" id="input-order-status" class="form-control">
+                    <option disabled value="">{{ entry_select_status }}</option>
+                    {% for order_status in order_statuses %}
+                      {% if order_status.order_status_id == payment_novapay_payment_Payment_Paid_status_id %}
+                        <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
+                      {% else %}
+                        <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-order-status">{{ entry_order_status_Payment_Failed }}</label>
+                <div class="col-sm-10">
+                  <select name="payment_novapay_payment_Payment_Failed_status_id" id="input-order-status" class="form-control">
+                    <option disabled value="">{{ entry_select_status }}</option>
+                    {% for order_status in order_statuses %}
+                      {% if order_status.order_status_id == payment_novapay_payment_Payment_Failed_status_id %}
+                        <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
+                      {% else %}
+                        <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-order-status">{{ entry_order_status_Payment_Voided }}</label>
+                <div class="col-sm-10">
+                  <select name="payment_novapay_payment_Payment_Voided_status_id" id="input-order-status" class="form-control">
+                    <option disabled value="">{{ entry_select_status }}</option>
+                    {% for order_status in order_statuses %}
+                      {% if order_status.order_status_id == payment_novapay_payment_Payment_Voided_status_id %}
+                        <option value="{{ order_status.order_status_id }}" selected="selected">{{ order_status.name }}</option>
+                      {% else %}
+                        <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+
+            </div>
+
+            {#            <div class="tab-pane" id="tab-export-operations">#}
+            {#              <div class="panel panel-default">#}
+            {#                <div class="panel-heading">#}
+            {#                  <h3 class="panel-title"><i class="fa fa-exclamation-triangle"></i> {{ text_export_operations }}</h3>#}
+            {#                  <form id="novapay-load-operation-exports">#}
+            {#                    <input type="text" name="dateFrom" value="2026-01-01" />#}
+            {#                    <input type="text" name="dateTo" value="2026-01-27" />#}
+            {#                    <select>#}
+            {#                      <option value="CSV">CSV</option>#}
+            {#                      <option value="JSON">JSON</option>#}
+            {#                      <option value="XML">XML</option>#}
+            {#                    </select>#}
+            {#                    <input type="text" name="email" value="" />#}
+            {#                    <button id="load-data-button">Load Data</button>#}
+            {#                  </form>#}
+            {#                </div>#}
+            {#                <div class="panel-body">#}
+            {#                  <textarea wrap="off" rows="15" readonly class="form-control"></textarea>#}
+            {#                </div>#}
+            {#              </div>#}
+
+            {#            </div>#}
+
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}
+
+{#<script type="text/javascript"><!--#}
+{#  $(document).ready(function() {#}
+{#    $('#submit-button').on('click', function(e) {#}
+{#      e.preventDefault(); // Prevent the default form submission#}
+
+{#      // Serialize the form data#}
+{#      var formData = $('#novapay-load-operation-exports').serialize();#}
+
+{#      // Add the OpenCart token to the data for security#}
+{#      formData += '&user_token=' + '<?php echo $user_token; ?>'; // For OC 3.x/4.x#}
+
+{#      $.ajax({#}
+{#        url: 'index.php?route=extension/payment/novapay_payment&user_token=<?php echo $user_token; ?>',#}
+{#        type: 'POST',#}
+{#        dataType: 'json',#}
+{#        data: formData,#}
+{#        success: function(json) {#}
+{#          // Handle the success response#}
+{#          if (json['success']) {#}
+{#            alert(json['success']);#}
+{#            // You can add further actions, like updating a list or redirecting#}
+{#          }#}
+{#          if (json['error']) {#}
+{#            alert(json['error']);#}
+{#          }#}
+{#        },#}
+{#        error: function(xhr, status, error) {#}
+{#          // Handle errors#}
+{#          console.error(xhr.responseText);#}
+{#          alert('An error occurred: ' + error);#}
+{#        }#}
+{#      });#}
+{#    });#}
+{#  });#}
+{#  //--></script>#}
