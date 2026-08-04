@@ -301,7 +301,7 @@ class Model implements ConfigurationInterface
         }
         $signature = null;
         $url = static::getHost() . $uri;
-        $payload = json_encode($data, JSON_UNESCAPED_UNICODE);
+        $payload = json_encode($data->jsonSerialize(), JSON_UNESCAPED_UNICODE);
         if ($mustBeSigned) {
             try {
                 $signature = $this->sign($payload);

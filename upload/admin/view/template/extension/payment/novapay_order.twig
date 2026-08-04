@@ -5,6 +5,14 @@
             <button name="novapay-confirm-hold" class="novapay-butt btn btn-danger">{{complete_name}}</button>
         </div>
     {% endif %}
+    <div>
+        <div style="margin:10px;display: flex; align-items: center;width:100%;">
+            Hold: {% if isHold %} Так {% else %} Ні {% endif %}
+        </div>
+        <div style="margin:10px;display: flex; align-items: center;width:100%;">
+            Session Id: {{novapay_id}}
+        </div>
+    </div>
     <div style="margin:10px;display: flex; align-items: center;width:100%;">
         <button name="novapay-cancel-payment" class="novapay-butt btn btn-danger">{{cancel_name}}</button>
     </div>
@@ -18,22 +26,14 @@
 </form>
 <script type="text/javascript"><!--
 
-    $('[name="change_depart"]').on('click', function(e) {
-        if($('.novapay-search').length < 1) {
-            $('.depart-block').append('<div class="novapay-search"><label>' + $(this).attr('data-city') + '</label><input type="text" class="novapay-search-city" /></div>');
-        }
-    });
-
     $(".novapay-butt").bind('click', function () {
         $('[name="button_name"]').val($(this).attr('name'));
-        if($(this).attr('name') === 'confirm') {
-            var amount_price = parseFloat($('[name="amount-price"]').val().replace(',', '.'));
+        if($(this).attr('name') === 'novapay-confirm-hold') {
+            var amount_price = parseFloat($('[name="confirm-hold-amount"]').val().replace(',', '.'));
             if((amount_price === '' || !(amount_price > 0)) || amount_price > parseFloat($('[name="total"]').val()).toFixed(2)) {
-                $('[name="amount-price"]').css('border', '1px solid red');
+                $('[name="amount"]').css('border', '1px solid red');
                 return;
             } else $('[name="amount"]').val(amount_price);
-        } else if($(this).attr('name') === 'print_pdf') {
-            $('#updateForm').attr('target', '_blank');
         }
         $('#updateForm').submit();
         $('#updateForm').removeAttr('target');

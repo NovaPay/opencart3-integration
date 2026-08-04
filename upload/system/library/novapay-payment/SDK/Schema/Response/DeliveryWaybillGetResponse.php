@@ -27,7 +27,7 @@ class DeliveryWaybillGetResponse extends Response
     /**
      * {@inheritDoc}
      */
-    public function jsonSerialize(): mixed
+    public function jsonSerialize()
     {
         $disposition = $this->getHeader('Content-Disposition');
         return [

@@ -82,12 +82,12 @@ class RSA
         if ('-----BEGIN' === substr($privateKeyOrFile, 0, 10)) {
             $this->setPrivateKey($privateKeyOrFile);
         } else {
-            throw new \InvalidArgumentException('Private key or file is not a valid RSA');
+            throw new \InvalidArgumentException('Private key is not a valid RSA', 2);
         }
         if ('-----BEGIN' === substr($publicKeyOrFile, 0, 10)) {
             $this->setPublicKey($publicKeyOrFile);
         } else {
-            throw new \InvalidArgumentException('Private key or file is not a valid RSA');
+            throw new \InvalidArgumentException('Public key is not a valid RSA', 1);
         }
         if (null !== $password) {
             $this->_password = $password;
@@ -156,10 +156,15 @@ class RSA
         $signature = null;
         try {
             $key = openssl_pkey_get_private($this->_getPrivateKey(), $this->_getPassword());
-            openssl_sign($this->data, $signature, $key, $this->_algorithm);
+            @openssl_sign($this->data, $signature, $key, $this->_algorithm);
         } catch (\Exception $e) {
             throw new \Exception("Cannot sign RSA key: {$e->getMessage()}", 500, $e);
         }
+
+        if ($signature === null) {
+            throw new \Exception("NovaPay: Signature creation failed", 500);
+        }
+
         return $signature;
     }
 
@@ -274,7 +279,7 @@ class RSA
      */
     private function _getPassword()
     {
-        return null === $this->_password ? '' : $this->_password;
+        return null === $this->_password ? null : $this->_password;
     }
 
     /**

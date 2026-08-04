@@ -94,7 +94,8 @@ class Session extends Model implements SessionInterface
         $merchant_id, 
         Client $client, 
         Metadata $metadata, 
-        Callback $callback
+        Callback $callback,
+        $success_redirect_timeout = null
     ) {
         // POST /session
         // Creates payment session
@@ -102,7 +103,8 @@ class Session extends Model implements SessionInterface
             $merchant_id, 
             $client, 
             $metadata, 
-            $callback
+            $callback,
+            $success_redirect_timeout
         );
 
         $response = $this->send($request, 'POST', '/session');

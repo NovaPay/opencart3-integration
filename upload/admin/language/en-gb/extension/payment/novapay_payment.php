@@ -40,9 +40,15 @@ $_['entry_order_status_Payment_Holded'] = 'Payment Holded - order status';
 $_['entry_order_status_Payment_Paid'] = 'Payment Paid - order status';
 $_['entry_order_status_Payment_Failed'] = 'Payment Failed - order status';
 $_['entry_order_status_Payment_Voided'] = 'Payment Voided - order status';
+$_['entry_success_redirect_timeout'] = 'Success redirect timeout';
 
 
 $_['cancel_name'] = 'cancel';
 $_['complete_name'] = 'complete';
 $_['refund_name'] = 'refund';
 $_['export_operations_name'] = 'Export operations';
+$_['error_public_key'] = 'Invalid key, key should begin from -----BEGIN PUBLIC KEY----- and finish with -----END PUBLIC KEY-----';
+$_['error_private_key'] = 'Invalid key, key should begin from -----BEGIN PRIVTE KEY----- and finish with -----END PRIVATE KEY-----';
+
+$_['help_success_url'] = 'Default: ';
+$_['help_fail_url'] = 'Default: ';

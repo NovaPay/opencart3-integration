@@ -38,3 +38,12 @@ $_['entry_order_status_Payment_Holded'] = 'Payment Holded - order status';
 $_['entry_order_status_Payment_Paid'] = 'Payment Paid - order status';
 $_['entry_order_status_Payment_Failed'] = 'Payment Failed - order status';
 $_['entry_order_status_Payment_Voided'] = 'Payment Voided - order status';
+$_['error_key']  = 'Invalid private key';
+
+$_['help_success_url'] = 'Default: ';
+$_['help_fail_url'] = 'Default: ';
+
+$_['entry_success_redirect_timeout'] = 'Success redirect timeout';
+
+$_['error_public_key'] = 'Invalid key, ключ має починатися з -----BEGIN PUBLIC KEY----- та закінчуватися -----END PUBLIC KEY-----';
+$_['error_private_key'] = 'Invalid key, ключ має починатися з -----BEGIN PRIVTE KEY----- та закінчуватися -----END PRIVATE KEY-----';

@@ -16,8 +16,8 @@
     </div>
   </div>
   <div class="container-fluid">
-    {% if error_warning %}
-      <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+    {% if error %}
+      <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error }}
         <button type="button" class="close" data-dismiss="alert">&times;</button>
       </div>
     {% endif %}
@@ -101,7 +101,7 @@
                 <div class="col-sm-10">
                   <textarea name="payment_novapay_payment_public_key" placeholder="{{ entry_public_key }}" id="input-vendor" class="form-control">{{ payment_novapay_payment_public_key }}</textarea>
                   {% if error_publickey %}
-                    <div class="text-danger">{{ error_public_key }}</div>
+                    <div class="text-danger">{{ error_publickey }}</div>
                   {% endif %}
                 </div>
               </div>
@@ -110,26 +110,36 @@
                 <div class="col-sm-10">
                   <textarea name="payment_novapay_payment_private_key" placeholder="{{ entry_private_key }}" id="input-vendor" class="form-control">{{ payment_novapay_payment_private_key }}</textarea>
                   {% if error_privatekey %}
-                    <div class="text-danger">{{ error_private_key }}</div>
+                    <div class="text-danger">{{ error_privatekey }}</div>
                   {% endif %}
                 </div>
               </div>
-              <div class="form-group required">
+              <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-vendor"><span data-toggle="tooltip" title="{{ entry_success_url_help }}">{{ entry_success_url }}</span></label>
                 <div class="col-sm-10">
                   <input type="text" name="payment_novapay_payment_success_url" value="{{ payment_novapay_payment_success_url }}" placeholder="{{ entry_success_url }}" id="input-vendor" class="form-control" />
                   {% if error_successurl %}
                     <div class="text-danger">{{ error_success_url }}</div>
                   {% endif %}
+                  <div class="form-text">{{ help_success_url }}</div>
                 </div>
               </div>
-              <div class="form-group required">
+              <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-vendor"><span data-toggle="tooltip" title="{{ entry_fail_url_help }}">{{ entry_fail_url }}</span></label>
                 <div class="col-sm-10">
                   <input type="text" name="payment_novapay_payment_fail_url" value="{{ payment_novapay_payment_fail_url }}" placeholder="{{ entry_fail_url }}" id="input-vendor" class="form-control" />
                   {% if error_fail_url %}
                     <div class="text-danger">{{ error_fail_url }}</div>
                   {% endif %}
+                  <div class="form-text">{{ help_fail_url }}</div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-vendor"><span data-toggle="tooltip" title="{{ entry_success_redirect_timeout }}">{{ entry_success_redirect_timeout }}</span></label>
+                <div class="col-sm-10">
+                  <input type="text" name="success_redirect_timeout" value="{{ success_redirect_timeout }}" placeholder="{{ entry_success_redirect_timeout }}" id="input-vendor" class="form-control" />
+                  <div class="form-text">{{ help_success_redirect_timeout }}</div>
                 </div>
               </div>
 

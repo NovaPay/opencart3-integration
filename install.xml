@@ -2,7 +2,7 @@
 <modification>
     <name>Novapay Payment</name>
     <code>novapay_payment</code>
-    <version>1.0.1</version>
+    <version>1.1.1</version>
     <author>Anton Aleksieiv</author>
     <link>https://github.com/aaleksieiev/opencart3-novapay-integration.git</link>
 </modification>

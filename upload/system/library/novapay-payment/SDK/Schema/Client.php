@@ -52,14 +52,14 @@ class Client extends Schema
      * 
      * @var string $phone The phone number.
      */
-    public $phone;
+    public $client_phone;
 
     /**
      * The email address of the Client.
-     * 
+     *
      * @var string $email The email address.
      */
-    public $email;
+    public $client_email;
 
     /**
      * The Client class constructor.
@@ -67,20 +67,20 @@ class Client extends Schema
      * @param mixed $first_name  First name.
      * @param mixed $last_name   Last name.
      * @param mixed $middle_name Middle name (patronymic).
-     * @param mixed $phone       Phone number.
+     * @param mixed $client_phone       Phone number.
      * @param mixed $email       Email address.
      */
     public function __construct(
-        $first_name = '', 
-        $last_name = '', 
-        $middle_name = '', 
-        $phone = '', 
-        $email = ''
+        $first_name = '',
+        $last_name = '',
+        $middle_name = '',
+        $client_phone = '',
+        $client_email = ''
     ) {
         $this->first_name  = $first_name;
         $this->last_name   = $last_name;
         $this->middle_name = $middle_name;
-        $this->phone       = '+' . preg_replace('/[^0-9]/', '', $phone);
-        $this->email       = $email;
+        $this->client_phone       = '+' . preg_replace('/[^0-9]/', '', $client_phone);
+        $this->client_email       = $client_email;
     }
 }

@@ -24,7 +24,7 @@ namespace Novapay\Payment\SDK\Schema;
  * @license  https://github.com/NovaPay/prestashop-integration/blob/master/LICENSE MIT
  * @link     https://novapay.ua/
  */
-class Schema implements \JsonSerializable
+class Schema
 {
     protected $values;
     /**
@@ -32,7 +32,7 @@ class Schema implements \JsonSerializable
      *
      * @return mixed The structured data for JSON serialization.
      */
-    public function jsonSerialize(): mixed
+    public function jsonSerialize()
     {
         return get_object_vars($this);
     }
@@ -66,12 +66,12 @@ class Schema implements \JsonSerializable
         return isset($this->values[$name]);
     }
 
-    public function __set(string $name, mixed $value): void
+    public function __set(string $name, $value)
     {
         $this->values[$name] = $value;
     }
 
-    public function __get(string $name): mixed
+    public function __get(string $name)
     {
         return $this->values[$name] ?? null;
     }

@@ -184,7 +184,7 @@ class Response extends Schema
      * 
      * @return array Data array.
      */
-    public function jsonSerialize(): mixed
+    public function jsonSerialize()
     {
         return parent::jsonSerialize();
         // return [

@@ -134,14 +134,17 @@ class Postback extends Model
      * 
      * @return bool TRUE if signature verified, otherwise FALSE.
      */
-    public function verify()
+    public function verify($algorithm)
     {
         $key = new RSA(
             $this->body,
-            '',
-            static::getPublicKey() 
-                ? static::getPublicKey() 
-                : static::getPublicKeyFile()
+            static::getPrivateKey(),
+            static::getPublicKey(),
+            null,
+            null,
+            null,
+            $algorithm
+
         );
         return $key->verify($this->sign);
     }

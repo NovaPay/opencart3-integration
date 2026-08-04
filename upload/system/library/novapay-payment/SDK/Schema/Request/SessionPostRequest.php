@@ -97,6 +97,7 @@ class SessionPostRequest extends Request
     private $_client;
     private $_metadata;
     private $_callback;
+    private $success_redirect_timeout = null;
 
     /**
      * SessionPostRequest constructor.
@@ -110,7 +111,8 @@ class SessionPostRequest extends Request
         $merchant_id, 
         Client $client = null, 
         Metadata $metadata = null, 
-        Callback $callback = null
+        Callback $callback = null,
+        $success_redirect_timeout = null
     ) {
         if (null === $client) {
             $client = new Client();
@@ -125,6 +127,8 @@ class SessionPostRequest extends Request
         $this->setClient($client);
         $this->setMeta($metadata);
         $this->setCallback($callback);
+
+        $this->success_redirect_timeout = $success_redirect_timeout;
     }
 
     public function setClient(Client $client)
@@ -157,22 +161,41 @@ class SessionPostRequest extends Request
         return $this->_callback;
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize()
     {
         $client   = $this->getClient();
         $callback = $this->getCallback();
         $meta     = $this->getMeta();
-        return [
+
+        $data = [
             'merchant_id'       => $this->merchant_id,
-            'client_first_name' => $client->first_name,
-            'client_last_name'  => $client->last_name,
-            'client_patronymic' => $client->middle_name,
-            'client_phone'      => $client->phone,
-            'client_email'      => $client->email,
+            'client_phone'      => $client->client_phone,
             'callback_url'      => $callback->postback,
             'success_url'       => $callback->success,
             'fail_url'          => $callback->fail,
             'metadata'          => $meta->jsonSerialize()
         ];
+
+        if (!empty($client->first_name)) {
+            $data['client_first_name'] = $client->first_name;
+        }
+
+        if (!empty($client->last_name)) {
+            $data['client_last_name'] = $client->last_name;
+        }
+
+        if (!empty($client->middle_name)) {
+            $data['client_patronymic'] = $client->middle_name;
+        }
+
+        if (!empty($client->client_email)) {
+            $data['client_email'] = $client->client_email;
+        }
+
+        if ($this->success_redirect_timeout !== null) {
+            $data['success_redirect_timeout'] = $this->success_redirect_timeout;
+        }
+
+        return $data;
     }
 }

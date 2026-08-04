@@ -98,7 +98,7 @@ class Metadata extends Schema
      *
      * @return mixed The structured data for JSON serialization.
      */
-    public function jsonSerialize(): mixed
+    public function jsonSerialize()
     {
         return $this->_meta;
     }
@@ -110,7 +110,7 @@ class Metadata extends Schema
      *
      * @return mixed      Medadata value or NULL if undefined.
      */
-    public function __get($name): mixed
+    public function __get(string $name)
     {
         return array_key_exists($name, $this->_meta)
             ? $this->_meta[$name] : null;

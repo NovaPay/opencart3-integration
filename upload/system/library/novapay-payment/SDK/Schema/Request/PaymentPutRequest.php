@@ -83,7 +83,7 @@ class PaymentPutRequest extends Request
      *
      * @return mixed The structured data for JSON serialization.
      */
-    public function jsonSerialize(): mixed
+    public function jsonSerialize()
     {
         $data = get_object_vars($this);
         if (null === $this->amount) {

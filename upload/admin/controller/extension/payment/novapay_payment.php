@@ -16,7 +16,7 @@ class ControllerExtensionPaymentNovapayPayment extends Controller {
             $this->model_setting_setting->editSetting('payment_novapay_payment', $this->request->post);
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect($this->url->link('extension/payment/novapay_payment', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true));
+            $this->response->redirect($this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true));
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -49,6 +49,7 @@ class ControllerExtensionPaymentNovapayPayment extends Controller {
         $data['entry_order_status_Payment_Paid'] = $this->language->get('entry_order_status_Payment_Paid');
         $data['entry_order_status_Payment_Failed'] = $this->language->get('entry_order_status_Payment_Failed');
         $data['entry_order_status_Payment_Voided'] = $this->language->get('entry_order_status_Payment_Voided');
+        $data['entry_success_redirect_timeout'] = $this->language->get('entry_success_redirect_timeout');
 
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -63,15 +64,15 @@ class ControllerExtensionPaymentNovapayPayment extends Controller {
         }
 
         if (isset($this->error['public_key'])) {
-            $data['error_public_key'] = $this->error['public_key'];
+            $data['error_publickey'] = $this->error['public_key'];
         } else {
-            $data['error_public_key'] = '';
+            $data['error_publickey'] = '';
         }
 
         if (isset($this->error['private_key'])) {
-            $data['error_private_key'] = $this->error['private_key'];
+            $data['error_privatekey'] = $this->error['private_key'];
         } else {
-            $data['error_private_key'] = '';
+            $data['error_privatekey'] = '';
         }
 
         if (isset($this->error['success_url'])) {
@@ -141,16 +142,23 @@ class ControllerExtensionPaymentNovapayPayment extends Controller {
             $data['payment_novapay_payment_private_key'] = $this->config->get('payment_novapay_payment_private_key');
         }
 
+        $catalog_url = new Url(HTTP_SERVER);
+
+        $data['help_success_url'] = $this->language->get('help_success_url') . $catalog_url->link('extension/payment/novapay_payment/success', [], true);
+        $data['help_fail_url'] = $this->language->get('help_fail_url') . $catalog_url->link('extension/payment/novapay_payment/failed', [], true);
+        $data['help_postback_url'] = $catalog_url->link('extension/novapay/payment/novapay.postBack', '', true);
+        $data['help_success_redirect_timeout'] = '';
+
         if (isset($this->request->post['payment_novapay_payment_success_url'])) {
             $data['payment_novapay_payment_success_url'] = $this->request->post['payment_novapay_payment_success_url'];
         } else {
-            $data['payment_novapay_payment_success_url'] = $this->config->get('payment_novapay_payment_success_url') ?? 'extension/payment/novapay_payment/success';
+            $data['payment_novapay_payment_success_url'] = $this->config->get('payment_novapay_payment_success_url');
         }
 
         if (isset($this->request->post['payment_novapay_payment_fail_url'])) {
             $data['payment_novapay_payment_fail_url'] = $this->request->post['payment_novapay_payment_fail_url'];
         } else {
-            $data['payment_novapay_payment_fail_url'] = $this->config->get('payment_novapay_payment_fail_url') ?? 'extension/payment/novapay_payment/failed';
+            $data['payment_novapay_payment_fail_url'] = $this->config->get('payment_novapay_payment_fail_url');
         }
 
         if (isset($this->request->post['payment_novapay_payment_is_hold'])) {
@@ -171,6 +179,10 @@ class ControllerExtensionPaymentNovapayPayment extends Controller {
             $data['payment_novapay_payment_is_log'] = $this->config->get('payment_novapay_payment_is_log');
         }
 
+        if (isset($this->request->post['success_redirect_timeout'])) {
+            $data['success_redirect_timeout'] = (int)$this->request->post['success_redirect_timeout'];
+        }
+
         $this->load->model('localisation/order_status');
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
@@ -183,7 +195,7 @@ class ControllerExtensionPaymentNovapayPayment extends Controller {
         if (isset($this->request->post['payment_novapay_payment_Payment_Expired_status_id'])) {
             $data['payment_novapay_payment_Payment_Expired_status_id'] = $this->request->post['payment_novapay_payment_Payment_Expired_status_id'];
         } else {
-            $data['payment_novapay_payment_Payment_Expired_status_id'] = $this->config->get('payment_novapay_payment_Payment_Expired_status_id') ?? 7;
+            $data['payment_novapay_payment_Payment_Expired_status_id'] = $this->config->get('payment_novapay_payment_Payment_Expired_status_id') ?? 14;
         }
 
         if (isset($this->request->post['payment_novapay_payment_Payment_Processing_status_id'])) {
@@ -195,19 +207,19 @@ class ControllerExtensionPaymentNovapayPayment extends Controller {
         if (isset($this->request->post['payment_novapay_payment_Payment_Holded_status_id'])) {
             $data['payment_novapay_payment_Payment_Holded_status_id'] = $this->request->post['payment_novapay_payment_Payment_Holded_status_id'];
         } else {
-            $data['payment_novapay_payment_Payment_Holded_status_id'] = $this->config->get('payment_novapay_payment_Payment_Holded_status_id') ?? 2;
+            $data['payment_novapay_payment_Payment_Holded_status_id'] = $this->config->get('payment_novapay_payment_Payment_Holded_status_id') ?? 15;
         }
 
         if (isset($this->request->post['payment_novapay_payment_Hold_Confirmed_status_id'])) {
-            $data['payment_novapay_payment_Hold_Confirmed_status_id'] = $this->request->post['payment_novapay_payment_Hold_Confirmed_status_id'];
+            $data['payment_novapay_payment_Payment_Hold_Confirmed_status_id'] = $this->request->post['payment_novapay_payment_Payment_Hold_Confirmed_status_id'];
         } else {
-            $data['payment_novapay_payment_Hold_Confirmed_status_id'] = $this->config->get('payment_novapay_payment_Hold_Confirmed_status_id') ?? 2;
+            $data['payment_novapay_payment_Payment_Hold_Confirmed_status_id'] = $this->config->get('payment_novapay_payment_Payment_Hold_Confirmed_status_id') ?? 2;
         }
 
-        if (isset($this->request->post['payment_novapay_payment_Hold_Completed_status_id'])) {
-            $data['payment_novapay_payment_Hold_Completed_status_id'] = $this->request->post['payment_novapay_payment_Hold_Completed_status_id'];
+        if (isset($this->request->post['payment_novapay_payment_Payment_Hold_Completed_status_id'])) {
+            $data['payment_novapay_payment_Payment_Hold_Completed_status_id'] = $this->request->post['payment_novapay_payment_Payment_Hold_Completed_status_id'];
         } else {
-            $data['payment_novapay_payment_Hold_Completed_status_id'] = $this->config->get('payment_novapay_payment_Hold_Completed_status_id') ?? 5;
+            $data['payment_novapay_payment_Payment_Hold_Completed_status_id'] = $this->config->get('payment_novapay_payment_Payment_Hold_Completed_status_id') ?? 5;
         }
 
         if (isset($this->request->post['payment_novapay_payment_Payment_Paid_status_id'])) {
@@ -223,7 +235,7 @@ class ControllerExtensionPaymentNovapayPayment extends Controller {
         }
 
         if (isset($this->request->post['payment_novapay_payment_Payment_Voided_status_id'])) {
-            $data['payment_novapay_Payment_Voided_status_id'] = $this->request->post['payment_novapay_payment_Payment_Voided_status_id'];
+            $data['payment_novapay_payment_Payment_Voided_status_id'] = $this->request->post['payment_novapay_payment_Payment_Voided_status_id'];
         } else {
             $data['payment_novapay_payment_Payment_Voided_status_id'] = $this->config->get('payment_novapay_payment_Payment_Voided_status_id') ?? 16;
         }
@@ -236,6 +248,7 @@ class ControllerExtensionPaymentNovapayPayment extends Controller {
     }
 
     protected function validate() {
+        $this->load->language('extension/payment/novapay_payment');
         if (!$this->user->hasPermission('modify', 'extension/payment/novapay_payment')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -252,16 +265,20 @@ class ControllerExtensionPaymentNovapayPayment extends Controller {
             $this->error['private_key'] = $this->language->get('error_private_key');
         }
 
-        if ($this->request->post['payment_novapay_payment_public_key'] && $this->request->post['payment_novapay_payment_private_key']) {
+        if ($this->request->post['payment_novapay_payment_public_key'] || $this->request->post['payment_novapay_payment_private_key']) {
             try {
                 $rsa = new \Novapay\Payment\SDK\Security\RSA(
                     'semple data',
                     $this->request->post['payment_novapay_payment_private_key'],
                     $this->request->post['payment_novapay_payment_public_key']
                 );
-
-            } catch (\Throwable $e) {
-                $this->error['private_key'] = $this->language->get('error_key');
+            } catch (\Exception $e) {
+                if ($e->getCode() == 2) {
+                    $this->error['private_key'] = $this->language->get('error_private_key');
+                }
+                if ($e->getCode() == 1) {
+                    $this->error['public_key'] = $this->language->get('error_public_key');
+                }
             }
         }
 
@@ -408,9 +425,10 @@ SQL;
                         . $this->config->get('payment_novapay_payment_Payment_Holded_status_id')
                         . "' WHERE order_id = '" . $orderId . "'"
                     );
+                    $msg = 'Success: Hold confirmed' . $this->request->post['amount'];
                     $sql = <<<SQL
 INSERT INTO {$prefix}order_history (order_id, order_status_id, notify, comment, date_added) 
-VALUES ($orderId, {$this->config->get('payment_novapay_payment_Payment_Holded_status_id')}, 0, 'Success: ' . $this->request->post['amount'], '{$date_added}')
+VALUES ($orderId, {$this->config->get('payment_novapay_payment_Payment_Holded_status_id')}, 0, '{$msg}', '{$date_added}')
 SQL;
                     $this->db->query($sql);
                 }
@@ -454,7 +472,7 @@ SQL;
         $this->model_extension_payment_novapay_payment->uninstall();
     }
 
-    private function customLog(string|Novapay\Payment\SDK\Model\Model $model)
+    private function customLog($model)
     {
         if (1 !== (int)$this->config->get('payment_novapay_payment_is_log')) {
             return;
